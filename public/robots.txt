@@ -1,0 +1,21 @@
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: *
+Allow: /
+
+Disallow: /app
+Disallow: /account
+Disallow: /reset-password
+Disallow: /mcp
+
+Sitemap: https://project--0fc55daf-10ce-412a-8455-64b611bb23f8.lovable.app/sitemap.xml
