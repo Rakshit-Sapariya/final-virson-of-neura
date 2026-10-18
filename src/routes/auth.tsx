@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { errorMessage } from "@/lib/api-error";
-import { lovable } from "@/integrations/lovable";
 import { FcGoogle } from "react-icons/fc";
 import {
   Mail,
@@ -238,22 +237,25 @@ function AuthPage() {
     setBusy(true);
     setError(null);
     try {
-      const result = (await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: authReturnUrl,
-      })) as { error?: unknown; redirected?: boolean } | undefined;
-      if (result?.error) {
-        setError(errorMessage(result.error, "Google sign-in failed. Please try again."));
+      const { data, error: oauthError } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: authReturnUrl,
+        },
+      });
+      if (oauthError) {
+        setError(errorMessage(oauthError, "Google sign-in failed. Please try again."));
         setBusy(false);
         return;
       }
-      // Popup flow: the session is already set, so go straight into the app
-      // instead of waiting only on the auth-state listener.
-      if (!result?.redirected) {
-        const { data } = await supabase.auth.getSession();
-        if (data.session) {
-          if (next) window.location.replace(next);
-          else navigate({ to: "/app" });
-        }
+      if (data?.url) {
+        window.location.href = data.url;
+        return;
+      }
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (sessionData?.session) {
+        if (next) window.location.replace(next);
+        else navigate({ to: "/app" });
       }
     } catch (err) {
       setError(errorMessage(err, "Google sign-in failed. Please try again."));

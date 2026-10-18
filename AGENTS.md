@@ -1,10 +1,15 @@
-<!-- LOVABLE:BEGIN -->
-> [!IMPORTANT]
-> This project is connected to [Lovable](https://lovable.dev). Avoid rewriting
-> published git history — force pushing, or rebasing/amending/squashing commits
-> that are already pushed — as it rewrites history on Lovable's side and the
-> user will likely lose their project history.
->
-> Commits you push to the connected branch sync back to Lovable and show up in
-> the editor, so keep the branch in a working state.
-<!-- LOVABLE:END -->
+# Neura AI Frontend Architecture
+
+This repository contains the official frontend for **Neura AI** — High-Performance Neural Intelligence Platform.
+
+### Core Stack
+- **Framework**: TanStack Start (Full-stack React with SSR & client hydration)
+- **Styling**: Tailwind CSS v4, Framer Motion & Lucide Icons
+- **Routing**: TanStack Router with code-splitting across 5 dedicated modular pages:
+  - `/` - Home Landing Page with Hero, Real-Time Latency Benchmark & Live Demos
+  - `/features` - Feature Matrix & Neural Architecture
+  - `/models` - Multi-Provider Model Hub & Benchmarks
+  - `/integrations` - SDKs, API Gateways & Tooling
+  - `/pricing` - Commercial Tiers & Enterprise Licensing
+- **Authentication**: Supabase Auth (Secure Email + Google OAuth)
+- **AI Engine**: Edge routing across OpenAI, OpenRouter, Groq, Google Gemini, and Nemotron LPU

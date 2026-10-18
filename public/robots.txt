@@ -18,4 +18,4 @@ Disallow: /account
 Disallow: /reset-password
 Disallow: /mcp
 
-Sitemap: https://project--0fc55daf-10ce-412a-8455-64b611bb23f8.lovable.app/sitemap.xml
+Sitemap: https://neura-ai.dev/sitemap.xml

@@ -2,7 +2,7 @@
  * Server-only AI core for Neura.
  *
  * Responsibilities:
- *  - provider/model abstraction (direct OpenAI + Lovable AI Gateway)
+ *  - provider/model abstraction (direct OpenAI + OpenRouter & Edge LPU)
  *  - safe selection: keys are read here only, never returned to the client
  *  - fallback across *configured* providers/models, with bounded retries
  *  - normalized response + normalized, user-safe error classification
@@ -13,7 +13,7 @@
 
 export type ProviderMessage = { role: "system" | "user" | "assistant"; content: string };
 
-export type ProviderId = "openai" | "lovable" | "groq" | "gemini" | "nemotron";
+export type ProviderId = "openai" | "openrouter" | "groq" | "gemini" | "nemotron";
 
 /** Cost-aware routing tiers. Cheapest capable model first within each tier. */
 export type RouteTier = "fast" | "balanced" | "deep";
@@ -130,12 +130,12 @@ function resolveProvider(model: string): ProviderConfig | null {
       model: model.slice("openai/".length),
     };
   }
-  const lovableKey = process.env["LOVABLE_API_KEY"];
-  if (lovableKey) {
+  const openrouterKey = process.env["OPENROUTER_API_KEY"];
+  if (openrouterKey) {
     return {
-      id: "lovable",
-      url: "https://ai.gateway.lovable.dev/v1/chat/completions",
-      key: lovableKey,
+      id: "openrouter",
+      url: "https://openrouter.ai/api/v1/chat/completions",
+      key: openrouterKey,
       model,
     };
   }
