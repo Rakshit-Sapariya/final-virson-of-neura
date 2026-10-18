@@ -20,7 +20,7 @@ import {
   HiBolt,
 } from "react-icons/hi2";
 
-const title = "Neura — The Future of Intelligent Assistants";
+const title = "NEURA - TECH";
 const description =
   "Neura is an AI assistant that understands, creates and evolves: realtime voice, code generation, reasoning agents and persistent memory in one adaptive intelligence layer.";
 

@@ -10,7 +10,7 @@ import { Reveal } from "@/components/ai/Reveal";
 import { MagneticButton } from "@/components/ai/MagneticButton";
 import { HiSparkles, HiArrowRight, HiBolt } from "react-icons/hi2";
 
-const title = "Capabilities & Interactive Runtime — Neura AI";
+const title = "Capabilities & Interactive Runtime — NEURA - TECH";
 const description =
   "Deep dive into Neura's multimodal capabilities: adaptive voice duplex, side-by-side code execution canvas, persistent vector memory, and private client inference.";
 

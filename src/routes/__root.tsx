@@ -88,11 +88,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Neura — The Future of Intelligent Assistants" },
+      { title: "NEURA - TECH" },
       {
         name: "description",
         content:
-          "Neura is an AI assistant that understands, creates and evolves — voice, code, vision and reasoning in one intelligence layer.",
+          "Neura Tech is an AI assistant that understands, creates and evolves — voice, code, vision and reasoning in one intelligence layer.",
       },
       { name: "theme-color", content: "#050505" },
       { property: "og:type", content: "website" },
@@ -109,7 +109,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+      { rel: "icon", href: "/favicon.ico", sizes: "any" },
+      { rel: "apple-touch-icon", href: "/favicon.png" },
     ],
   }),
   shellComponent: RootShell,

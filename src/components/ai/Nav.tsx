@@ -37,10 +37,8 @@ export function Nav() {
         className={`pointer-events-auto flex w-full max-w-5xl items-center justify-between rounded-full px-5 py-3 transition-all duration-300 glass shadow-[0_12px_45px_rgba(0,0,0,0.7)] border border-white/10 backdrop-blur-2xl`}
       >
         <Link to="/" className="flex items-center gap-2.5">
-          <span className="relative flex h-7 w-7 items-center justify-center rounded-md bg-primary/15">
-            <span className="h-2.5 w-2.5 rounded-full bg-primary glow-ring" />
-          </span>
-          <span className="font-display text-sm font-semibold tracking-[0.22em]">NEURA</span>
+          <img src="/favicon.svg" alt="NEURA - TECH" className="h-7 w-7 rounded-md" />
+          <span className="font-display text-sm font-semibold tracking-[0.22em]">NEURA - TECH</span>
         </Link>
 
         <ul className="hidden items-center gap-8 md:flex">

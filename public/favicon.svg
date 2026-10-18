@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="neuraGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f5ff" />
+      <stop offset="50%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#8b5cf6" />
+    </linearGradient>
+    <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00f5ff" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#050811" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <!-- Futuristic Dark Background with Border Glow -->
+  <rect width="64" height="64" rx="16" fill="#060913" />
+  <rect width="64" height="64" rx="16" fill="url(#coreGlow)" />
+  <rect x="1.5" y="1.5" width="61" height="61" rx="14.5" stroke="url(#neuraGlow)" stroke-width="1.5" stroke-opacity="0.5" />
+  
+  <!-- Neural Tech Core Node 'N' -->
+  <path d="M19 46 L19 18" stroke="url(#neuraGlow)" stroke-width="5" stroke-linecap="round" />
+  <path d="M19 20 L45 44" stroke="url(#neuraGlow)" stroke-width="5" stroke-linecap="round" />
+  <path d="M45 18 L45 46" stroke="url(#neuraGlow)" stroke-width="5" stroke-linecap="round" />
+  
+  <!-- Glowing Neural Synapse Nodes -->
+  <circle cx="19" cy="18" r="4.5" fill="#00f5ff" />
+  <circle cx="45" cy="18" r="4.5" fill="#38bdf8" />
+  <circle cx="19" cy="46" r="4.5" fill="#6366f1" />
+  <circle cx="45" cy="46" r="4.5" fill="#a855f7" />
+  
+  <!-- Central Neural Spark -->
+  <circle cx="32" cy="32" r="3.2" fill="#ffffff" />
+</svg>

@@ -10,7 +10,7 @@ import { Reveal } from "@/components/ai/Reveal";
 import { MagneticButton } from "@/components/ai/MagneticButton";
 import { HiCreditCard, HiArrowRight, HiShieldCheck } from "react-icons/hi2";
 
-const title = "Pricing & Intelligence Tiers — Neura AI";
+const title = "Pricing & Intelligence Tiers — NEURA - TECH";
 const description =
   "Simple, transparent pricing for individuals, high-output teams, and enterprises. Start free, upgrade to Pro for $12/month, or deploy dedicated private VPC clusters.";
 

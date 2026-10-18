@@ -40,7 +40,7 @@ import { VscVscode } from "react-icons/vsc";
 export const Route = createFileRoute("/integrations")({
   head: () => ({
     meta: [
-      { title: "Integrations & Ecosystem — Neura AI" },
+      { title: "Integrations & Ecosystem — NEURA - TECH" },
       {
         name: "description",
         content:

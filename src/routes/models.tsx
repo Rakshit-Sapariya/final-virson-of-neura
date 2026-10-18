@@ -10,7 +10,7 @@ import { Reveal } from "@/components/ai/Reveal";
 import { MagneticButton } from "@/components/ai/MagneticButton";
 import { HiCpuChip, HiArrowRight, HiBolt } from "react-icons/hi2";
 
-const title = "Model Mesh & Dynamic Routing — Neura AI";
+const title = "Model Mesh & Dynamic Routing — NEURA - TECH";
 const description =
   "Explore Neura's dynamic multi-model mesh: Nemotron 3 Ultra 550B, Claude 3.7 Sonnet, Gemini 2.5 Flash 1M, Groq LPUs, and private WebGPU in-browser inference.";
 

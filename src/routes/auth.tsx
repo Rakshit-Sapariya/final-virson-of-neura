@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { OtpCard } from "@/components/auth/OtpCard";
 
-const title = "Sign in — Neura AI Assistant";
+const title = "Sign in — NEURA - TECH";
 const description =
   "Sign in or create your Neura account to launch the intelligent assistant workspace.";
 
