@@ -1,8 +1,8 @@
-# Neura AI — Final Version (Frontend)
+# NEURA - TECH — Final Version (Frontend)
 
 > An intelligence layer for voice, code, vision, and reasoning — built for builders and creators.
 
-![Neura AI Banner](public/favicon.ico)
+![NEURA - TECH](public/favicon.svg)
 
 ## 🌟 Overview
 
@@ -72,6 +72,13 @@ Visit `http://localhost:3000` in your browser.
 pnpm run build
 pnpm run preview
 ```
+
+---
+
+## 👥 Core Contributors & Maintainers
+
+- **[@Rakshit-Sapariya](https://github.com/Rakshit-Sapariya)** — Lead Architect & Creator
+- **[@atharvashukla098-tech](https://github.com/atharvashukla098-tech)** — Core Contributor & Collaborator
 
 ---
 
