@@ -8,7 +8,6 @@ const links: Array<{ label: string; to: string }> = [
   { label: "Overview", to: "/" },
   { label: "Capabilities", to: "/features" },
   { label: "Models", to: "/models" },
-  { label: "Integrations", to: "/integrations" },
   { label: "Pricing", to: "/pricing" },
 ];
 

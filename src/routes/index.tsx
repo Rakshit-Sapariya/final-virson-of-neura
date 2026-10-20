@@ -14,7 +14,6 @@ import { MagneticButton } from "@/components/ai/MagneticButton";
 import {
   HiSparkles,
   HiCpuChip,
-  HiCommandLine,
   HiCreditCard,
   HiArrowRight,
   HiBolt,
@@ -62,16 +61,6 @@ const pages = [
   },
   {
     pageNumber: "04",
-    title: "Developer Tools & Ecosystem",
-    path: "/integrations",
-    icon: HiCommandLine,
-    badge: "15+ Native Tools",
-    color: "#38bdf8",
-    description:
-      "Connect Neura seamlessly with GitHub, VS Code, Supabase, Slack, Docker, Postgres, Discord, and REST OpenAPI webhooks.",
-  },
-  {
-    pageNumber: "05",
     title: "Transparent Pricing & FAQ",
     path: "/pricing",
     icon: HiCreditCard,

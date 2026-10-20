@@ -9,7 +9,7 @@ const socials = [
   { icon: FiLinkedin, label: "LinkedIn", href: "https://linkedin.com" },
 ];
 
-type FooterLink = { label: string; href?: string; to?: "/" | "/features" | "/models" | "/integrations" | "/pricing" | "/auth" | "/app" | "/account" };
+type FooterLink = { label: string; href?: string; to?: "/" | "/features" | "/models" | "/pricing" | "/auth" | "/app" | "/account" };
 
 const columns: { title: string; links: FooterLink[] }[] = [
   {
@@ -18,7 +18,6 @@ const columns: { title: string; links: FooterLink[] }[] = [
       { label: "Overview", to: "/" as const },
       { label: "Capabilities", to: "/features" as const },
       { label: "Models & Mesh", to: "/models" as const },
-      { label: "Integrations", to: "/integrations" as const },
       { label: "Pricing & Plans", to: "/pricing" as const },
     ],
   },
@@ -26,7 +25,6 @@ const columns: { title: string; links: FooterLink[] }[] = [
     title: "Platform",
     links: [
       { label: "Multi-Model Router", to: "/models" as const },
-      { label: "Developer Ecosystem", to: "/integrations" as const },
       { label: "Commercial SLA", to: "/pricing" as const },
       { label: "Contact Engineering", href: "mailto:hello@neura.ai" },
     ],

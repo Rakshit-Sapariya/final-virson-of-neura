@@ -71,12 +71,6 @@ function PricingPage() {
               Models
             </Link>
             <Link
-              to="/integrations"
-              className="text-xs font-medium text-white/60 transition-colors hover:text-white"
-            >
-              Integrations
-            </Link>
-            <Link
               to="/pricing"
               className="text-xs font-semibold text-emerald-400"
             >

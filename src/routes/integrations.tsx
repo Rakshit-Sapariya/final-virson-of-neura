@@ -1,5 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, useMemo } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useState, useMemo, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -2437,7 +2438,42 @@ const CATEGORIES: { id: Category; label: string }[] = [
 ];
 
 function IntegrationsPage() {
+  const navigate = useNavigate();
+  const [authState, setAuthState] = useState<"checking" | "allowed">("checking");
   const search = Route.useSearch() as { onboard?: string };
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      // 1. Check for demo session or local flag
+      if (typeof window !== "undefined") {
+        const demo = localStorage.getItem("neura_demo_session");
+        if (demo === "true" || demo === "active") {
+          if (active) setAuthState("allowed");
+          return;
+        }
+      }
+
+      // 2. Check Supabase session
+      try {
+        const { data } = await supabase.auth.getSession();
+        if (!active) return;
+        if (!data?.session) {
+          navigate({ to: "/auth", search: { next: "/integrations" } });
+          return;
+        }
+        setAuthState("allowed");
+      } catch (e) {
+        if (!active) return;
+        navigate({ to: "/auth", search: { next: "/integrations" } });
+      }
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, [navigate]);
+
   const [isOnboarding, setIsOnboarding] = useState(() => {
     if (typeof window !== "undefined") {
       const justOnboarded = localStorage.getItem("neura_just_onboarded");
@@ -2659,6 +2695,18 @@ print(response.output)`,
   }'`,
   };
 
+  if (authState === "checking") {
+    return (
+      <div className="min-h-screen bg-[#05070f] flex flex-col items-center justify-center text-white">
+        <div className="relative flex items-center justify-center">
+          <div className="h-12 w-12 rounded-full border-2 border-cyan-500/20 border-t-cyan-400 animate-spin" />
+          <img src="/favicon.svg" alt="NEURA" className="absolute h-6 w-6" />
+        </div>
+        <p className="mt-4 text-xs tracking-widest uppercase text-white/50 font-mono">Verifying Workspace Access...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#05070f] text-foreground selection:bg-cyan-500/30 selection:text-cyan-200">
       {/* 2D Atmospheric Background Gradients */}
@@ -2680,7 +2728,7 @@ print(response.output)`,
               NEURA
             </span>
             <span className="ml-2 rounded-full border border-cyan-400/30 bg-cyan-950/40 px-2 py-0.5 text-[10px] font-medium text-cyan-300">
-              INTEGRATIONS
+              ECOSYSTEM
             </span>
           </Link>
 
@@ -2704,12 +2752,6 @@ print(response.output)`,
               Models
             </Link>
             <Link
-              to="/integrations"
-              className="text-xs font-semibold text-cyan-400"
-            >
-              Integrations
-            </Link>
-            <Link
               to="/pricing"
               className="text-xs font-medium text-white/60 transition-colors hover:text-white"
             >
@@ -2719,18 +2761,17 @@ print(response.output)`,
 
           <div className="flex items-center gap-3">
             <Link
-              to="/auth"
+              to="/account"
               className="rounded-xl border border-white/10 px-3.5 py-2 text-xs font-medium text-white/80 transition-colors hover:border-cyan-400/40 hover:bg-white/[0.04] hover:text-white"
             >
-              Sign In
+              Account
             </Link>
             <Link
               to="/app"
-              onClick={() => localStorage.setItem("neura_demo_session", "true")}
               className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 px-4 py-2 text-xs font-semibold text-white shadow-[0_0_20px_rgba(110,231,255,0.3)] transition-all hover:shadow-[0_0_25px_rgba(110,231,255,0.5)]"
             >
               <Zap className="h-3.5 w-3.5" />
-              <span>Launch Assistant</span>
+              <span>Open Assistant</span>
             </Link>
           </div>
         </div>
