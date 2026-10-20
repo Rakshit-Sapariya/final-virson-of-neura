@@ -30,6 +30,11 @@ import {
   Calendar,
   Mail,
   Share2,
+  Phone,
+  Flame,
+  Compass,
+  TrendingUp,
+  Palette,
 } from "lucide-react";
 import {
   SiGithub,
@@ -198,9 +203,12 @@ import {
   SiFramer,
   SiBlender,
   SiSketch,
+  SiNewrelic,
+  SiRaycast,
+  SiPuppeteer,
 } from "react-icons/si";
 import { FaSlack, FaAws, FaSalesforce, FaMicrosoft, FaLinkedin } from "react-icons/fa6";
-import { VscVscode } from "react-icons/vsc";
+import { VscVscode, VscAzure, VscAzureDevops } from "react-icons/vsc";
 
 export const Route = createFileRoute("/integrations")({
   head: () => ({
@@ -236,7 +244,7 @@ type Integration = {
 };
 
 const INTEGRATIONS: Integration[] = [
-  {
+{
     id: "github",
     name: "GitHub",
     category: "developer",
@@ -250,7 +258,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://docs.github.com",
     connectUrl: "https://github.com/settings/connections/applications",
   },
-  {
+{
     id: "vscode",
     name: "VS Code & Cursor",
     category: "developer",
@@ -264,7 +272,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://code.visualstudio.com",
     connectUrl: "https://marketplace.visualstudio.com",
   },
-  {
+{
     id: "supabase",
     name: "Supabase",
     category: "cloud",
@@ -278,7 +286,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://supabase.com",
     connectUrl: "https://supabase.com/dashboard/project/_/settings/api",
   },
-  {
+{
     id: "docker",
     name: "Docker",
     category: "developer",
@@ -290,7 +298,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://docker.com",
     connectUrl: "https://hub.docker.com/settings/security",
   },
-  {
+{
     id: "terminal",
     name: "Neura CLI & Terminal",
     category: "developer",
@@ -304,7 +312,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://github.com/Rakshit-Sapariya/final-virson-of-neura",
     connectUrl: "https://github.com/Rakshit-Sapariya/final-virson-of-neura#getting-started",
   },
-  {
+{
     id: "slack",
     name: "Slack",
     category: "productivity",
@@ -316,7 +324,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://slack.com",
     connectUrl: "https://api.slack.com/apps",
   },
-  {
+{
     id: "discord",
     name: "Discord",
     category: "productivity",
@@ -328,7 +336,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://discord.com/developers/docs",
     connectUrl: "https://discord.com/developers/applications",
   },
-  {
+{
     id: "notion",
     name: "Notion",
     category: "productivity",
@@ -342,7 +350,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://notion.so",
     connectUrl: "https://www.notion.so/profile/integrations",
   },
-  {
+{
     id: "linear",
     name: "Linear",
     category: "productivity",
@@ -354,7 +362,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://linear.app",
     connectUrl: "https://linear.app/settings/api",
   },
-  {
+{
     id: "figma",
     name: "Figma",
     category: "productivity",
@@ -366,7 +374,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://figma.com",
     connectUrl: "https://www.figma.com/settings",
   },
-  {
+{
     id: "postgresql",
     name: "PostgreSQL",
     category: "cloud",
@@ -378,7 +386,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://postgresql.org",
     connectUrl: "https://www.postgresql.org/docs/current/auth-pg-hba-conf.html",
   },
-  {
+{
     id: "redis",
     name: "Redis",
     category: "cloud",
@@ -390,7 +398,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://redis.io",
     connectUrl: "https://redis.io/docs/latest/operate/oss_and_stack/management/security/",
   },
-  {
+{
     id: "googlecloud",
     name: "Google Cloud",
     category: "cloud",
@@ -402,7 +410,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://cloud.google.com",
     connectUrl: "https://console.cloud.google.com/apis/credentials",
   },
-  {
+{
     id: "aws",
     name: "Amazon Web Services",
     category: "cloud",
@@ -414,7 +422,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://aws.amazon.com",
     connectUrl: "https://console.aws.amazon.com/iam/home#/security_credentials",
   },
-  {
+{
     id: "webgpu",
     name: "WebGPU Local Inference",
     category: "ai",
@@ -428,7 +436,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "#webgpu",
     connectUrl: "https://webgpureport.org",
   },
-  {
+{
     id: "webhooks",
     name: "REST API & Webhooks",
     category: "ai",
@@ -441,7 +449,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "#api",
     connectUrl: "/app",
   },
-  {
+{
     id: "googledrive",
     name: "Google Drive & Docs",
     category: "productivity",
@@ -455,7 +463,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://support.google.com/drive",
     connectUrl: "https://drive.google.com",
   },
-  {
+{
     id: "gmail",
     name: "Gmail & Smart Mail",
     category: "productivity",
@@ -469,7 +477,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://support.google.com/mail",
     connectUrl: "https://mail.google.com",
   },
-  {
+{
     id: "googlecalendar",
     name: "Google Calendar",
     category: "productivity",
@@ -483,7 +491,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://support.google.com/calendar",
     connectUrl: "https://calendar.google.com",
   },
-  {
+{
     id: "websearch",
     name: "Live Web Search & Browsing",
     category: "ai",
@@ -497,7 +505,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://www.google.com",
     connectUrl: "https://www.google.com",
   },
-  {
+{
     id: "perplexity",
     name: "Perplexity Deep Search",
     category: "ai",
@@ -511,7 +519,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://www.perplexity.ai",
     connectUrl: "https://www.perplexity.ai",
   },
-  {
+{
     id: "wolfram",
     name: "Wolfram Computational Core",
     category: "ai",
@@ -525,7 +533,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://www.wolframalpha.com",
     connectUrl: "https://www.wolframalpha.com",
   },
-  {
+{
     id: "zapier",
     name: "Zapier Automation",
     category: "ai",
@@ -539,7 +547,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://zapier.com",
     connectUrl: "https://zapier.com/app/connections",
   },
-  {
+{
     id: "stripe",
     name: "Stripe Billing & Payments",
     category: "cloud",
@@ -553,7 +561,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://stripe.com/docs",
     connectUrl: "https://dashboard.stripe.com/apikeys",
   },
-  {
+{
     id: "jira",
     name: "Jira Software",
     category: "productivity",
@@ -565,7 +573,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://www.atlassian.com/software/jira",
     connectUrl: "https://id.atlassian.com",
   },
-  {
+{
     id: "confluence",
     name: "Confluence Docs",
     category: "productivity",
@@ -577,7 +585,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://www.atlassian.com/software/confluence",
     connectUrl: "https://id.atlassian.com",
   },
-  {
+{
     id: "hubspot",
     name: "HubSpot CRM",
     category: "productivity",
@@ -589,7 +597,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developers.hubspot.com",
     connectUrl: "https://app.hubspot.com",
   },
-  {
+{
     id: "salesforce",
     name: "Salesforce Cloud",
     category: "cloud",
@@ -602,7 +610,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developer.salesforce.com",
     connectUrl: "https://login.salesforce.com",
   },
-  {
+{
     id: "gitlab",
     name: "GitLab",
     category: "developer",
@@ -614,7 +622,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://docs.gitlab.com",
     connectUrl: "https://gitlab.com",
   },
-  {
+{
     id: "sentry",
     name: "Sentry Telemetry",
     category: "developer",
@@ -626,7 +634,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://docs.sentry.io",
     connectUrl: "https://sentry.io",
   },
-  {
+{
     id: "postman",
     name: "Postman Collections",
     category: "developer",
@@ -638,7 +646,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://learning.postman.com",
     connectUrl: "https://web.postman.co",
   },
-  {
+{
     id: "spotify",
     name: "Spotify Focus Audio",
     category: "productivity",
@@ -650,7 +658,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developer.spotify.com",
     connectUrl: "https://developer.spotify.com/dashboard",
   },
-  {
+{
     id: "vercel",
     name: "Vercel Edge Cloud",
     category: "developer",
@@ -663,7 +671,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://vercel.com/docs",
     connectUrl: "https://vercel.com/dashboard",
   },
-  {
+{
     id: "netlify",
     name: "Netlify",
     category: "developer",
@@ -675,7 +683,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://docs.netlify.com",
     connectUrl: "https://app.netlify.com",
   },
-  {
+{
     id: "cloudflare",
     name: "Cloudflare Workers & KV",
     category: "cloud",
@@ -688,7 +696,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developers.cloudflare.com",
     connectUrl: "https://dash.cloudflare.com",
   },
-  {
+{
     id: "datadog",
     name: "Datadog APM & Logs",
     category: "developer",
@@ -700,7 +708,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://docs.datadoghq.com",
     connectUrl: "https://app.datadoghq.com",
   },
-  {
+{
     id: "grafana",
     name: "Grafana Observability",
     category: "developer",
@@ -712,7 +720,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://grafana.com/docs",
     connectUrl: "https://grafana.com",
   },
-  {
+{
     id: "kubernetes",
     name: "Kubernetes Cluster",
     category: "cloud",
@@ -724,7 +732,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://kubernetes.io/docs",
     connectUrl: "https://kubernetes.io",
   },
-  {
+{
     id: "terraform",
     name: "HashiCorp Terraform",
     category: "developer",
@@ -736,7 +744,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developer.hashicorp.com/terraform",
     connectUrl: "https://app.terraform.io",
   },
-  {
+{
     id: "mongodb",
     name: "MongoDB Atlas",
     category: "cloud",
@@ -748,7 +756,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://www.mongodb.com/docs",
     connectUrl: "https://cloud.mongodb.com",
   },
-  {
+{
     id: "snowflake",
     name: "Snowflake Data Cloud",
     category: "cloud",
@@ -761,7 +769,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://docs.snowflake.com",
     connectUrl: "https://app.snowflake.com",
   },
-  {
+{
     id: "elastic",
     name: "Elasticsearch & Kibana",
     category: "cloud",
@@ -773,7 +781,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://www.elastic.co/docs",
     connectUrl: "https://cloud.elastic.co",
   },
-  {
+{
     id: "bitbucket",
     name: "Atlassian Bitbucket",
     category: "developer",
@@ -785,7 +793,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://support.atlassian.com/bitbucket-cloud",
     connectUrl: "https://bitbucket.org",
   },
-  {
+{
     id: "airtable",
     name: "Airtable Relational Base",
     category: "productivity",
@@ -797,7 +805,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://airtable.com/developers/web/api/introduction",
     connectUrl: "https://airtable.com",
   },
-  {
+{
     id: "trello",
     name: "Trello Kanban",
     category: "productivity",
@@ -809,7 +817,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developer.atlassian.com/cloud/trello",
     connectUrl: "https://trello.com",
   },
-  {
+{
     id: "asana",
     name: "Asana Project Suite",
     category: "productivity",
@@ -821,7 +829,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developers.asana.com",
     connectUrl: "https://app.asana.com",
   },
-  {
+{
     id: "clickup",
     name: "ClickUp Work Management",
     category: "productivity",
@@ -833,7 +841,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://clickup.com/api",
     connectUrl: "https://app.clickup.com",
   },
-  {
+{
     id: "obsidian",
     name: "Obsidian Knowledge Graph",
     category: "productivity",
@@ -845,7 +853,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://obsidian.md/help",
     connectUrl: "https://obsidian.md",
   },
-  {
+{
     id: "miro",
     name: "Miro Infinite Canvas",
     category: "productivity",
@@ -857,7 +865,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developers.miro.com",
     connectUrl: "https://miro.com/app",
   },
-  {
+{
     id: "loom",
     name: "Loom Async Video",
     category: "productivity",
@@ -869,7 +877,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://dev.loom.com",
     connectUrl: "https://www.loom.com",
   },
-  {
+{
     id: "zoom",
     name: "Zoom Video & Transcripts",
     category: "productivity",
@@ -881,7 +889,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://marketplace.zoom.us/docs",
     connectUrl: "https://zoom.us/signin",
   },
-  {
+{
     id: "dropbox",
     name: "Dropbox Cloud Storage",
     category: "productivity",
@@ -893,7 +901,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://www.dropbox.com/developers",
     connectUrl: "https://www.dropbox.com/home",
   },
-  {
+{
     id: "box",
     name: "Box Enterprise Content",
     category: "productivity",
@@ -905,7 +913,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developer.box.com",
     connectUrl: "https://app.box.com",
   },
-  {
+{
     id: "coda",
     name: "Coda Interactive Docs",
     category: "productivity",
@@ -917,7 +925,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://coda.io/developers/apis/v1",
     connectUrl: "https://coda.io",
   },
-  {
+{
     id: "make",
     name: "Make Automation Scenarios",
     category: "ai",
@@ -930,7 +938,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://www.make.com/en/help",
     connectUrl: "https://us1.make.com",
   },
-  {
+{
     id: "n8n",
     name: "n8n Workflow Automation",
     category: "ai",
@@ -943,7 +951,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://docs.n8n.io",
     connectUrl: "https://app.n8n.cloud",
   },
-  {
+{
     id: "zendesk",
     name: "Zendesk Support Suite",
     category: "productivity",
@@ -955,7 +963,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developer.zendesk.com",
     connectUrl: "https://www.zendesk.com/login",
   },
-  {
+{
     id: "intercom",
     name: "Intercom Customer Messenger",
     category: "productivity",
@@ -967,7 +975,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developers.intercom.com",
     connectUrl: "https://app.intercom.com",
   },
-  {
+{
     id: "mailchimp",
     name: "Mailchimp Email Engine",
     category: "productivity",
@@ -979,7 +987,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://mailchimp.com/developer",
     connectUrl: "https://login.mailchimp.com",
   },
-  {
+{
     id: "shopify",
     name: "Shopify Merchant Platform",
     category: "productivity",
@@ -992,7 +1000,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://shopify.dev",
     connectUrl: "https://admin.shopify.com",
   },
-  {
+{
     id: "quickbooks",
     name: "QuickBooks Financials",
     category: "productivity",
@@ -1004,7 +1012,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developer.intuit.com",
     connectUrl: "https://quickbooks.intuit.com",
   },
-  {
+{
     id: "dribbble",
     name: "Dribbble Creative Network",
     category: "productivity",
@@ -1016,7 +1024,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developer.dribbble.com",
     connectUrl: "https://dribbble.com",
   },
-  {
+{
     id: "unsplash",
     name: "Unsplash Asset Engine",
     category: "productivity",
@@ -1028,7 +1036,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://unsplash.com/developers",
     connectUrl: "https://unsplash.com",
   },
-  {
+{
     id: "x",
     name: "X / Twitter Feed & Publishing",
     category: "productivity",
@@ -1040,7 +1048,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developer.x.com",
     connectUrl: "https://x.com",
   },
-  {
+{
     id: "reddit",
     name: "Reddit Community API",
     category: "productivity",
@@ -1052,7 +1060,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://www.reddit.com/dev/api",
     connectUrl: "https://www.reddit.com",
   },
-  {
+{
     id: "youtube",
     name: "YouTube Studio Content",
     category: "productivity",
@@ -1064,7 +1072,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developers.google.com/youtube/v3",
     connectUrl: "https://studio.youtube.com",
   },
-  {
+{
     id: "medium",
     name: "Medium Editorial Hub",
     category: "productivity",
@@ -1076,7 +1084,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://github.com/Medium/medium-api-docs",
     connectUrl: "https://medium.com",
   },
-  {
+{
     id: "wordpress",
     name: "WordPress Headless Engine",
     category: "productivity",
@@ -1088,7 +1096,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developer.wordpress.org/rest-api",
     connectUrl: "https://wordpress.com",
   },
-  {
+{
     id: "ghost",
     name: "Ghost Publishing CMS",
     category: "productivity",
@@ -1100,7 +1108,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://ghost.org/docs/admin-api",
     connectUrl: "https://ghost.org",
   },
-  {
+{
     id: "huggingface",
     name: "Hugging Face Hub",
     category: "ai",
@@ -1113,7 +1121,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://huggingface.co/docs",
     connectUrl: "https://huggingface.co/settings/tokens",
   },
-  {
+{
     id: "replicate",
     name: "Replicate Serverless Compute",
     category: "ai",
@@ -1126,7 +1134,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://replicate.com/docs",
     connectUrl: "https://replicate.com",
   },
-  {
+{
     id: "qdrant",
     name: "Qdrant Vector Database",
     category: "cloud",
@@ -1139,7 +1147,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://qdrant.tech/documentation",
     connectUrl: "https://cloud.qdrant.io",
   },
-  {
+{
     id: "githubactions",
     name: "GitHub Actions CI/CD",
     category: "developer",
@@ -1151,7 +1159,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://docs.github.com/en/actions",
     connectUrl: "https://github.com/features/actions",
   },
-  {
+{
     id: "circleci",
     name: "CircleCI Automation",
     category: "developer",
@@ -1163,7 +1171,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://circleci.com/docs",
     connectUrl: "https://app.circleci.com",
   },
-  {
+{
     id: "prisma",
     name: "Prisma Studio & ORM",
     category: "developer",
@@ -1175,7 +1183,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://www.prisma.io/docs",
     connectUrl: "https://cloud.prisma.io",
   },
-  {
+{
     id: "graphql",
     name: "GraphQL Federation Gateway",
     category: "developer",
@@ -1187,7 +1195,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://graphql.org/learn",
     connectUrl: "https://graphql.org",
   },
-  {
+{
     id: "swagger",
     name: "OpenAPI / SwaggerHub",
     category: "developer",
@@ -1199,7 +1207,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://swagger.io/docs",
     connectUrl: "https://swagger.io/tools/swaggerhub",
   },
-  {
+{
     id: "kafka",
     name: "Apache Kafka Event Stream",
     category: "cloud",
@@ -1212,7 +1220,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://kafka.apache.org/documentation",
     connectUrl: "https://kafka.apache.org",
   },
-  {
+{
     id: "rabbitmq",
     name: "RabbitMQ Message Broker",
     category: "cloud",
@@ -1224,7 +1232,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://www.rabbitmq.com/docs",
     connectUrl: "https://www.rabbitmq.com",
   },
-  {
+{
     id: "clickhouse",
     name: "ClickHouse Analytical DB",
     category: "cloud",
@@ -1237,7 +1245,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://clickhouse.com/docs",
     connectUrl: "https://clickhouse.com/cloud",
   },
-  {
+{
     id: "cockroach",
     name: "CockroachDB Distributed SQL",
     category: "cloud",
@@ -1249,7 +1257,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://www.cockroachlabs.com/docs",
     connectUrl: "https://cockroachlabs.cloud",
   },
-  {
+{
     id: "duckdb",
     name: "DuckDB Analytical Engine",
     category: "cloud",
@@ -1261,7 +1269,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://duckdb.org/docs",
     connectUrl: "https://duckdb.org",
   },
-  {
+{
     id: "neo4j",
     name: "Neo4j Knowledge Graph",
     category: "cloud",
@@ -1274,7 +1282,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://neo4j.com/docs",
     connectUrl: "https://neo4j.com/cloud/platform/aura-graph-database",
   },
-  {
+{
     id: "firebase",
     name: "Firebase Cloud Platform",
     category: "cloud",
@@ -1286,7 +1294,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://firebase.google.com/docs",
     connectUrl: "https://console.firebase.google.com",
   },
-  {
+{
     id: "appwrite",
     name: "Appwrite Cloud BaaS",
     category: "cloud",
@@ -1298,7 +1306,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://appwrite.io/docs",
     connectUrl: "https://cloud.appwrite.io",
   },
-  {
+{
     id: "microsoft365",
     name: "Microsoft 365 & Office",
     category: "productivity",
@@ -1311,7 +1319,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developer.microsoft.com/en-us/graph",
     connectUrl: "https://www.office.com",
   },
-  {
+{
     id: "linkedin",
     name: "LinkedIn Professional",
     category: "productivity",
@@ -1323,7 +1331,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developer.linkedin.com",
     connectUrl: "https://www.linkedin.com",
   },
-  {
+{
     id: "googledocs",
     name: "Google Docs",
     category: "productivity",
@@ -1335,7 +1343,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developers.google.com/docs",
     connectUrl: "https://docs.google.com",
   },
-  {
+{
     id: "googlesheets",
     name: "Google Sheets",
     category: "productivity",
@@ -1347,7 +1355,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developers.google.com/sheets",
     connectUrl: "https://sheets.google.com",
   },
-  {
+{
     id: "googleslides",
     name: "Google Slides",
     category: "productivity",
@@ -1358,7 +1366,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developers.google.com/slides",
     connectUrl: "https://slides.google.com",
   },
-  {
+{
     id: "googlemeet",
     name: "Google Meet",
     category: "productivity",
@@ -1369,7 +1377,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developers.google.com/meet",
     connectUrl: "https://meet.google.com",
   },
-  {
+{
     id: "googleforms",
     name: "Google Forms",
     category: "productivity",
@@ -1380,7 +1388,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developers.google.com/forms",
     connectUrl: "https://forms.google.com",
   },
-  {
+{
     id: "googlekeep",
     name: "Google Keep",
     category: "productivity",
@@ -1391,7 +1399,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://support.google.com/keep",
     connectUrl: "https://keep.google.com",
   },
-  {
+{
     id: "googlecolab",
     name: "Google Colaboratory",
     category: "developer",
@@ -1403,7 +1411,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://colab.research.google.com",
     connectUrl: "https://colab.research.google.com",
   },
-  {
+{
     id: "googlebigquery",
     name: "Google BigQuery",
     category: "cloud",
@@ -1415,7 +1423,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://cloud.google.com/bigquery/docs",
     connectUrl: "https://console.cloud.google.com/bigquery",
   },
-  {
+{
     id: "googleanalytics",
     name: "Google Analytics 4",
     category: "productivity",
@@ -1426,7 +1434,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developers.google.com/analytics",
     connectUrl: "https://analytics.google.com",
   },
-  {
+{
     id: "googlesearchconsole",
     name: "Google Search Console",
     category: "productivity",
@@ -1437,7 +1445,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developers.google.com/webmaster-tools",
     connectUrl: "https://search.google.com/search-console",
   },
-  {
+{
     id: "duckduckgo",
     name: "DuckDuckGo Search",
     category: "ai",
@@ -1449,7 +1457,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://duckduckgo.com/about",
     connectUrl: "https://duckduckgo.com",
   },
-  {
+{
     id: "brave",
     name: "Brave Search & Shield",
     category: "ai",
@@ -1460,7 +1468,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://brave.com/search",
     connectUrl: "https://search.brave.com",
   },
-  {
+{
     id: "digitalocean",
     name: "DigitalOcean Cloud",
     category: "cloud",
@@ -1472,7 +1480,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://docs.digitalocean.com",
     connectUrl: "https://cloud.digitalocean.com",
   },
-  {
+{
     id: "render",
     name: "Render Cloud",
     category: "cloud",
@@ -1483,7 +1491,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://render.com/docs",
     connectUrl: "https://dashboard.render.com",
   },
-  {
+{
     id: "railway",
     name: "Railway Infrastructure",
     category: "cloud",
@@ -1495,7 +1503,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://docs.railway.app",
     connectUrl: "https://railway.app",
   },
-  {
+{
     id: "flyio",
     name: "Fly.io Global Edge",
     category: "cloud",
@@ -1506,7 +1514,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://fly.io/docs",
     connectUrl: "https://fly.io/dashboard",
   },
-  {
+{
     id: "ansible",
     name: "Red Hat Ansible",
     category: "developer",
@@ -1517,7 +1525,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://docs.ansible.com",
     connectUrl: "https://www.ansible.com",
   },
-  {
+{
     id: "helm",
     name: "Helm Kubernetes Charts",
     category: "developer",
@@ -1528,7 +1536,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://helm.sh/docs",
     connectUrl: "https://helm.sh",
   },
-  {
+{
     id: "argo",
     name: "Argo CD GitOps",
     category: "developer",
@@ -1540,7 +1548,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://argo-cd.readthedocs.io",
     connectUrl: "https://argoproj.github.io/cd",
   },
-  {
+{
     id: "prometheus",
     name: "Prometheus Telemetry",
     category: "developer",
@@ -1551,40 +1559,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://prometheus.io/docs",
     connectUrl: "https://prometheus.io",
   },
-  {
-    id: "nginx",
-    name: "NGINX Reverse Proxy",
-    category: "developer",
-    description: "High-performance reverse proxy configurations, load balancing rules, SSL termination, and rate limiting.",
-    icon: SiNginx,
-    accent: "#009639",
-    tags: ["Reverse Proxy", "Load Balancing", "HTTP Cache", "SSL Gateway"],
-    docsUrl: "https://nginx.org/en/docs",
-    connectUrl: "https://nginx.org",
-  },
-  {
-    id: "apache",
-    name: "Apache HTTP Server",
-    category: "developer",
-    description: "Web server virtual hosts, .htaccess rewrite directives, modular security headers, and proxy gateways.",
-    icon: SiApache,
-    accent: "#d22128",
-    tags: ["Web Server", "Virtual Hosts", "Rewrite Rules", "Modules"],
-    docsUrl: "https://httpd.apache.org/docs",
-    connectUrl: "https://httpd.apache.org",
-  },
-  {
-    id: "caddy",
-    name: "Caddy Modern Server",
-    category: "developer",
-    description: "Automatic HTTPS certificate issuance, declarative Caddyfile routing, HTTP/3, and reverse proxying.",
-    icon: SiCaddy,
-    accent: "#1f88c0",
-    tags: ["Auto HTTPS", "Caddyfile", "HTTP/3", "Zero Config"],
-    docsUrl: "https://caddyserver.com/docs",
-    connectUrl: "https://caddyserver.com",
-  },
-  {
+{
     id: "traefik",
     name: "Traefik Edge Router",
     category: "developer",
@@ -1595,7 +1570,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://doc.traefik.io/traefik",
     connectUrl: "https://traefik.io",
   },
-  {
+{
     id: "podman",
     name: "Podman Rootless Containers",
     category: "developer",
@@ -1606,7 +1581,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://docs.podman.io",
     connectUrl: "https://podman.io",
   },
-  {
+{
     id: "auth0",
     name: "Auth0 by Okta",
     category: "developer",
@@ -1618,7 +1593,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://auth0.com/docs",
     connectUrl: "https://manage.auth0.com",
   },
-  {
+{
     id: "clerk",
     name: "Clerk Authentication",
     category: "developer",
@@ -1630,7 +1605,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://clerk.com/docs",
     connectUrl: "https://dashboard.clerk.com",
   },
-  {
+{
     id: "okta",
     name: "Okta Enterprise Identity",
     category: "developer",
@@ -1642,7 +1617,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developer.okta.com",
     connectUrl: "https://www.okta.com",
   },
-  {
+{
     id: "onepassword",
     name: "1Password Secrets Vault",
     category: "developer",
@@ -1653,7 +1628,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developer.1password.com",
     connectUrl: "https://1password.com",
   },
-  {
+{
     id: "bitwarden",
     name: "Bitwarden Vault",
     category: "developer",
@@ -1664,7 +1639,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://bitwarden.com/help",
     connectUrl: "https://vault.bitwarden.com",
   },
-  {
+{
     id: "cypress",
     name: "Cypress Testing Cloud",
     category: "developer",
@@ -1675,7 +1650,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://docs.cypress.io",
     connectUrl: "https://cloud.cypress.io",
   },
-  {
+{
     id: "jest",
     name: "Jest Test Framework",
     category: "developer",
@@ -1686,7 +1661,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://jestjs.io/docs/getting-started",
     connectUrl: "https://jestjs.io",
   },
-  {
+{
     id: "vitest",
     name: "Vitest Next-Gen Runner",
     category: "developer",
@@ -1698,7 +1673,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://vitest.dev/guide",
     connectUrl: "https://vitest.dev",
   },
-  {
+{
     id: "sonarqube",
     name: "SonarQube Code Quality",
     category: "developer",
@@ -1709,7 +1684,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://docs.sonarqube.org",
     connectUrl: "https://www.sonarqube.org",
   },
-  {
+{
     id: "codecov",
     name: "Codecov Telemetry",
     category: "developer",
@@ -1720,7 +1695,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://docs.codecov.com",
     connectUrl: "https://about.codecov.io",
   },
-  {
+{
     id: "mysql",
     name: "MySQL Database Engine",
     category: "cloud",
@@ -1731,7 +1706,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://dev.mysql.com/doc",
     connectUrl: "https://www.mysql.com",
   },
-  {
+{
     id: "mariadb",
     name: "MariaDB Enterprise",
     category: "cloud",
@@ -1742,7 +1717,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://mariadb.com/kb",
     connectUrl: "https://mariadb.org",
   },
-  {
+{
     id: "sqlite",
     name: "SQLite In-Process Engine",
     category: "cloud",
@@ -1754,7 +1729,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://www.sqlite.org/docs.html",
     connectUrl: "https://www.sqlite.org",
   },
-  {
+{
     id: "minio",
     name: "MinIO High Performance S3",
     category: "cloud",
@@ -1765,7 +1740,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://min.io/docs/minio/linux/index.html",
     connectUrl: "https://min.io",
   },
-  {
+{
     id: "cassandra",
     name: "Apache Cassandra",
     category: "cloud",
@@ -1777,7 +1752,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://cassandra.apache.org/doc/latest",
     connectUrl: "https://cassandra.apache.org",
   },
-  {
+{
     id: "fauna",
     name: "Fauna Serverless Document DB",
     category: "cloud",
@@ -1788,7 +1763,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://docs.fauna.com",
     connectUrl: "https://dashboard.fauna.com",
   },
-  {
+{
     id: "influxdb",
     name: "InfluxDB Time-Series Engine",
     category: "cloud",
@@ -1799,7 +1774,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://docs.influxdata.com",
     connectUrl: "https://cloud2.influxdata.com",
   },
-  {
+{
     id: "timescale",
     name: "TimescaleDB Hypertable SQL",
     category: "cloud",
@@ -1810,7 +1785,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://docs.timescale.com",
     connectUrl: "https://console.cloud.timescale.com",
   },
-  {
+{
     id: "planetscale",
     name: "PlanetScale Database",
     category: "cloud",
@@ -1822,7 +1797,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://planetscale.com/docs",
     connectUrl: "https://app.planetscale.com",
   },
-  {
+{
     id: "upstash",
     name: "Upstash Serverless Redis",
     category: "cloud",
@@ -1834,7 +1809,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://docs.upstash.com",
     connectUrl: "https://console.upstash.com",
   },
-  {
+{
     id: "surrealdb",
     name: "SurrealDB Multi-Model",
     category: "cloud",
@@ -1845,7 +1820,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://surrealdb.com/docs",
     connectUrl: "https://surrealdb.com",
   },
-  {
+{
     id: "bun",
     name: "Bun High-Performance Runtime",
     category: "developer",
@@ -1857,7 +1832,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://bun.sh/docs",
     connectUrl: "https://bun.sh",
   },
-  {
+{
     id: "deno",
     name: "Deno Modern Runtime",
     category: "developer",
@@ -1868,40 +1843,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://docs.deno.com",
     connectUrl: "https://deno.com",
   },
-  {
-    id: "pnpm",
-    name: "pnpm Fast Disk-Efficient",
-    category: "developer",
-    description: "Fast, disk space efficient package manager using hard links and content-addressable storage for monorepos.",
-    icon: SiPnpm,
-    accent: "#f69220",
-    tags: ["Hardlinks Storage", "Fast Install", "Monorepo Workspaces", "Strict Hoisting"],
-    docsUrl: "https://pnpm.io/motivation",
-    connectUrl: "https://pnpm.io",
-  },
-  {
-    id: "yarn",
-    name: "Yarn Package Manager",
-    category: "developer",
-    description: "Safe and reliable dependency management, Yarn Berry Plug'n'Play architecture, and workspace workflows.",
-    icon: SiYarn,
-    accent: "#2c8ebb",
-    tags: ["Plug'n'Play", "Deterministic Locks", "Workspaces", "Zero Installs"],
-    docsUrl: "https://yarnpkg.com/getting-started",
-    connectUrl: "https://yarnpkg.com",
-  },
-  {
-    id: "npm",
-    name: "npm Global Registry",
-    category: "developer",
-    description: "World's largest software package registry, automated dependency audit fixes, semver checks, and publishing.",
-    icon: SiNpm,
-    accent: "#cb3837",
-    tags: ["Package Registry", "Security Audits", "Semver Publishing", "CLI Tools"],
-    docsUrl: "https://docs.npmjs.com",
-    connectUrl: "https://www.npmjs.com",
-  },
-  {
+{
     id: "vite",
     name: "Vite Frontend Tooling",
     category: "developer",
@@ -1913,18 +1855,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://vite.dev/guide",
     connectUrl: "https://vite.dev",
   },
-  {
-    id: "turborepo",
-    name: "Turborepo Monorepo Build",
-    category: "developer",
-    description: "High-performance build system for TypeScript monorepos with intelligent remote caching and task orchestration.",
-    icon: SiTurborepo,
-    accent: "#ef4444",
-    tags: ["Remote Caching", "Task Pipelines", "Monorepo Scaling", "Parallel Runs"],
-    docsUrl: "https://turbo.build/repo/docs",
-    connectUrl: "https://turbo.build",
-  },
-  {
+{
     id: "nextjs",
     name: "Next.js React Framework",
     category: "developer",
@@ -1936,7 +1867,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://nextjs.org/docs",
     connectUrl: "https://nextjs.org",
   },
-  {
+{
     id: "nuxtjs",
     name: "Nuxt Vue Framework",
     category: "developer",
@@ -1947,7 +1878,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://nuxt.com/docs",
     connectUrl: "https://nuxt.com",
   },
-  {
+{
     id: "svelte",
     name: "SvelteKit Web Framework",
     category: "developer",
@@ -1958,7 +1889,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://svelte.dev/docs",
     connectUrl: "https://svelte.dev",
   },
-  {
+{
     id: "astro",
     name: "Astro Content Framework",
     category: "developer",
@@ -1969,18 +1900,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://docs.astro.build",
     connectUrl: "https://astro.build",
   },
-  {
-    id: "tailwindcss",
-    name: "Tailwind CSS",
-    category: "developer",
-    description: "Utility-first CSS framework, automated arbitrary class parsing, responsive breakpoint synthesis, and themes.",
-    icon: SiTailwindcss,
-    accent: "#06b6d4",
-    tags: ["Utility Classes", "JIT Compiler", "Responsive Design", "Dark Mode Engine"],
-    docsUrl: "https://tailwindcss.com/docs",
-    connectUrl: "https://tailwindcss.com",
-  },
-  {
+{
     id: "pytorch",
     name: "PyTorch Deep Learning",
     category: "ai",
@@ -1992,7 +1912,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://pytorch.org/docs",
     connectUrl: "https://pytorch.org",
   },
-  {
+{
     id: "tensorflow",
     name: "TensorFlow Engine",
     category: "ai",
@@ -2003,29 +1923,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://www.tensorflow.org/learn",
     connectUrl: "https://www.tensorflow.org",
   },
-  {
-    id: "keras",
-    name: "Keras High-Level API",
-    category: "ai",
-    description: "High-level neural networks API capable of running on top of JAX, PyTorch, and TensorFlow with unified syntax.",
-    icon: SiKeras,
-    accent: "#d00000",
-    tags: ["Neural Networks", "Unified Backends", "Multi-backend", "Model Training"],
-    docsUrl: "https://keras.io/api",
-    connectUrl: "https://keras.io",
-  },
-  {
-    id: "opencv",
-    name: "OpenCV Computer Vision",
-    category: "ai",
-    description: "Real-time computer vision algorithms, image manipulation filters, object detection bounding boxes, and camera stream.",
-    icon: SiOpencv,
-    accent: "#5c3ee8",
-    tags: ["Computer Vision", "Image Processing", "Object Detection", "Video Streams"],
-    docsUrl: "https://docs.opencv.org",
-    connectUrl: "https://opencv.org",
-  },
-  {
+{
     id: "jupyter",
     name: "Jupyter Notebooks",
     category: "developer",
@@ -2036,40 +1934,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://jupyter.org/documentation",
     connectUrl: "https://jupyter.org",
   },
-  {
-    id: "pandas",
-    name: "Pandas DataFrames",
-    category: "developer",
-    description: "High-performance tabular data structures, time series analysis, CSV/Parquet import/export, and grouping aggregates.",
-    icon: SiPandas,
-    accent: "#150458",
-    tags: ["Tabular DataFrames", "Data Wrangling", "Time Series", "Data Cleaning"],
-    docsUrl: "https://pandas.pydata.org/docs",
-    connectUrl: "https://pandas.pydata.org",
-  },
-  {
-    id: "numpy",
-    name: "NumPy Scientific Compute",
-    category: "developer",
-    description: "Fundamental package for scientific computing with Python, N-dimensional array objects, and linear algebra routines.",
-    icon: SiNumpy,
-    accent: "#013243",
-    tags: ["N-D Arrays", "Linear Algebra", "Fourier Transforms", "Vector Math"],
-    docsUrl: "https://numpy.org/doc",
-    connectUrl: "https://numpy.org",
-  },
-  {
-    id: "scikitlearn",
-    name: "Scikit-learn Algorithms",
-    category: "ai",
-    description: "Simple and efficient tools for predictive data analysis, classification, regression, clustering, and preprocessing.",
-    icon: SiScikitlearn,
-    accent: "#f7931e",
-    tags: ["Predictive Modeling", "Classification", "Clustering", "Preprocessing"],
-    docsUrl: "https://scikit-learn.org/stable/documentation.html",
-    connectUrl: "https://scikit-learn.org",
-  },
-  {
+{
     id: "wandb",
     name: "Weights & Biases",
     category: "ai",
@@ -2081,7 +1946,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://docs.wandb.ai",
     connectUrl: "https://wandb.ai/site",
   },
-  {
+{
     id: "mlflow",
     name: "MLflow Lifecycle",
     category: "ai",
@@ -2092,7 +1957,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://mlflow.org/docs/latest/index.html",
     connectUrl: "https://mlflow.org",
   },
-  {
+{
     id: "spark",
     name: "Apache Spark Engine",
     category: "cloud",
@@ -2104,7 +1969,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://spark.apache.org/docs/latest",
     connectUrl: "https://spark.apache.org",
   },
-  {
+{
     id: "airflow",
     name: "Apache Airflow Orchestration",
     category: "cloud",
@@ -2116,7 +1981,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://airflow.apache.org/docs",
     connectUrl: "https://airflow.apache.org",
   },
-  {
+{
     id: "ray",
     name: "Ray Distributed Compute",
     category: "ai",
@@ -2128,7 +1993,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://docs.ray.io",
     connectUrl: "https://www.ray.io",
   },
-  {
+{
     id: "telegram",
     name: "Telegram Bot & Channel API",
     category: "productivity",
@@ -2140,7 +2005,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://core.telegram.org/bots/api",
     connectUrl: "https://t.me/BotFather",
   },
-  {
+{
     id: "whatsapp",
     name: "WhatsApp Business Cloud",
     category: "productivity",
@@ -2151,7 +2016,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developers.facebook.com/docs/whatsapp",
     connectUrl: "https://business.whatsapp.com",
   },
-  {
+{
     id: "signal",
     name: "Signal Private Messenger",
     category: "productivity",
@@ -2162,7 +2027,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://signal.org/docs",
     connectUrl: "https://signal.org",
   },
-  {
+{
     id: "matrix",
     name: "Matrix Decentralized Protocol",
     category: "productivity",
@@ -2173,7 +2038,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://matrix.org/docs",
     connectUrl: "https://matrix.org",
   },
-  {
+{
     id: "discourse",
     name: "Discourse Community Forum",
     category: "productivity",
@@ -2184,7 +2049,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://docs.discourse.org",
     connectUrl: "https://www.discourse.org",
   },
-  {
+{
     id: "basecamp",
     name: "Basecamp Project Hub",
     category: "productivity",
@@ -2195,64 +2060,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://github.com/basecamp/bc3-api",
     connectUrl: "https://basecamp.com",
   },
-  {
-    id: "chrome",
-    name: "Google Chrome Extension",
-    category: "developer",
-    description: "Browser automation manifest v3 bridge, tab content extraction, DOM inspection, and background service workers.",
-    icon: SiGooglechrome,
-    accent: "#4285f4",
-    badge: "Browser",
-    tags: ["Manifest V3", "DOM Extraction", "Service Worker", "Web Extension"],
-    docsUrl: "https://developer.chrome.com/docs/extensions",
-    connectUrl: "https://chromewebstore.google.com",
-  },
-  {
-    id: "firefox",
-    name: "Mozilla Firefox Developer",
-    category: "developer",
-    description: "WebExtensions API, privacy-first cookie isolation containers, debugging console, and developer tools sync.",
-    icon: SiFirefoxbrowser,
-    accent: "#ff7139",
-    tags: ["WebExtensions", "Multi-Account Containers", "Open Web Engine"],
-    docsUrl: "https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions",
-    connectUrl: "https://addons.mozilla.org",
-  },
-  {
-    id: "safari",
-    name: "Apple Safari Extensions",
-    category: "developer",
-    description: "WebKit extension integration, macOS and iOS content blocking rules, and native Web Extension bridging.",
-    icon: SiSafari,
-    accent: "#006cff",
-    tags: ["WebKit Engine", "Content Blockers", "macOS / iOS Extensions"],
-    docsUrl: "https://developer.apple.com/documentation/safariservices",
-    connectUrl: "https://developer.apple.com/safari",
-  },
-  {
-    id: "tor",
-    name: "Tor Onion Network",
-    category: "ai",
-    description: "Onion routing proxy, multi-hop anonymous web retrieval, censorship bypass, and privacy verification.",
-    icon: SiTorbrowser,
-    accent: "#7d4698",
-    badge: "Onion Proxy",
-    tags: ["Onion Routing", "Censorship Bypass", "Anonymous Web"],
-    docsUrl: "https://community.torproject.org",
-    connectUrl: "https://www.torproject.org",
-  },
-  {
-    id: "arc",
-    name: "Arc Browser Spaces",
-    category: "productivity",
-    description: "Tab spaces organization, live easels integration, split view workspace automation, and pinned tab synchronization.",
-    icon: SiArc,
-    accent: "#f96956",
-    tags: ["Browser Spaces", "Split Views", "Pinned Tabs", "Easels Sync"],
-    docsUrl: "https://arc.net",
-    connectUrl: "https://arc.net",
-  },
-  {
+{
     id: "paypal",
     name: "PayPal Merchant Platform",
     category: "productivity",
@@ -2264,7 +2072,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developer.paypal.com/docs/api/overview",
     connectUrl: "https://developer.paypal.com",
   },
-  {
+{
     id: "square",
     name: "Square Terminal & POS",
     category: "productivity",
@@ -2275,7 +2083,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://developer.squareup.com/docs",
     connectUrl: "https://developer.squareup.com",
   },
-  {
+{
     id: "wise",
     name: "Wise Global Banking",
     category: "productivity",
@@ -2286,7 +2094,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://wise.com/developer/docs",
     connectUrl: "https://wise.com",
   },
-  {
+{
     id: "coinbase",
     name: "Coinbase Developer Platform",
     category: "productivity",
@@ -2298,7 +2106,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://docs.cdp.coinbase.com",
     connectUrl: "https://cloud.coinbase.com",
   },
-  {
+{
     id: "framer",
     name: "Framer Interactive Canvas",
     category: "productivity",
@@ -2309,7 +2117,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://www.framer.com/developers",
     connectUrl: "https://www.framer.com",
   },
-  {
+{
     id: "blender",
     name: "Blender 3D Suite",
     category: "productivity",
@@ -2321,7 +2129,7 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "https://docs.blender.org",
     connectUrl: "https://www.blender.org",
   },
-  {
+{
     id: "sketch",
     name: "Sketch Vector Design",
     category: "productivity",
@@ -2331,6 +2139,288 @@ const INTEGRATIONS: Integration[] = [
     tags: ["Vector UI", "Symbols & Tokens", "Design Systems", "Developer Handoff"],
     docsUrl: "https://developer.sketch.com",
     connectUrl: "https://www.sketch.com",
+  },
+  {
+    id: "azure",
+    name: "Microsoft Azure Cloud",
+    category: "cloud",
+    description: "Virtual machines, AKS clusters, Azure Cosmos DB, Blob Storage, and enterprise cloud resource management.",
+    icon: VscAzure,
+    accent: "#0089d6",
+    badge: "Enterprise Cloud",
+    tags: ["Azure Cloud", "Cosmos DB", "AKS", "Blob Storage"],
+    docsUrl: "https://learn.microsoft.com/azure",
+    connectUrl: "https://portal.azure.com",
+  },
+  {
+    id: "azuredevops",
+    name: "Azure DevOps",
+    category: "developer",
+    description: "Azure Boards agile planning, Repos Git repositories, CI/CD Pipelines, and cloud artifact packaging.",
+    icon: VscAzureDevops,
+    accent: "#0078d7",
+    badge: "DevOps",
+    tags: ["Azure Pipelines", "Azure Boards", "Repos", "Artifacts"],
+    docsUrl: "https://learn.microsoft.com/azure/devops",
+    connectUrl: "https://dev.azure.com",
+  },
+  {
+    id: "pinecone",
+    name: "Pinecone Vector Database",
+    category: "cloud",
+    description: "Serverless vector database designed for high-scale semantic search, metadata filtering, and real-time agent memory.",
+    icon: Database,
+    accent: "#000000",
+    badge: "Vector DB",
+    tags: ["Serverless Vector", "Semantic Index", "Metadata Filters", "Fast Retrieval"],
+    docsUrl: "https://docs.pinecone.io",
+    connectUrl: "https://app.pinecone.io",
+  },
+  {
+    id: "weaviate",
+    name: "Weaviate Cloud",
+    category: "cloud",
+    description: "Cloud-native open-source vector search engine, hybrid BM25 and dense retrieval, and multi-modal vector search.",
+    icon: Database,
+    accent: "#00d68f",
+    badge: "Hybrid Search",
+    tags: ["Hybrid Search", "Dense Vectors", "Multi-modal Search", "Graph Vectors"],
+    docsUrl: "https://weaviate.io/developers/weaviate",
+    connectUrl: "https://console.weaviate.cloud",
+  },
+  {
+    id: "chroma",
+    name: "Chroma Vector DB",
+    category: "cloud",
+    description: "AI-native open-source embedding database for document ingestion, collection queries, and long-term agent memory.",
+    icon: Database,
+    accent: "#ff4b4b",
+    tags: ["Embeddings Store", "Collections", "Semantic Memory", "Open Source DB"],
+    docsUrl: "https://docs.trychroma.com",
+    connectUrl: "https://www.trychroma.com",
+  },
+  {
+    id: "newrelic",
+    name: "New Relic Observability",
+    category: "developer",
+    description: "Full-stack cloud telemetry, synthetic browser monitoring, APM transaction tracing, and anomaly alerts.",
+    icon: SiNewrelic,
+    accent: "#008c99",
+    badge: "Full-stack APM",
+    tags: ["Full Stack Telemetry", "Synthetic Tests", "APM Tracing", "Anomaly Alerts"],
+    docsUrl: "https://docs.newrelic.com",
+    connectUrl: "https://one.newrelic.com",
+  },
+  {
+    id: "raycast",
+    name: "Raycast Quick Launcher",
+    category: "productivity",
+    description: "Blazingly fast desktop command bar, custom script commands, extension store integration, and window tools.",
+    icon: SiRaycast,
+    accent: "#ff6363",
+    badge: "Desktop AI",
+    tags: ["Desktop Launcher", "Script Commands", "Quick Actions", "Extension Store"],
+    docsUrl: "https://manual.raycast.com",
+    connectUrl: "https://www.raycast.com",
+  },
+  {
+    id: "monday",
+    name: "Monday.com Work OS",
+    category: "productivity",
+    description: "Custom team boards, project portfolio dashboards, visual Gantt roadmaps, and automated workflow triggers.",
+    icon: Workflow,
+    accent: "#ff3d57",
+    tags: ["Work OS", "Gantt Roadmaps", "Portfolio Tracking", "Team Boards"],
+    docsUrl: "https://developer.monday.com",
+    connectUrl: "https://auth.monday.com",
+  },
+  {
+    id: "canva",
+    name: "Canva Creative Studio",
+    category: "productivity",
+    description: "Visual design creation, social media banner templates, presentation layouts, and brand asset library sync.",
+    icon: Palette,
+    accent: "#00c4cc",
+    badge: "Creative",
+    tags: ["Visual Design", "Templates", "Brand Kits", "Presentations"],
+    docsUrl: "https://www.canva.dev",
+    connectUrl: "https://www.canva.com",
+  },
+  {
+    id: "twilio",
+    name: "Twilio Communications",
+    category: "productivity",
+    description: "Programmatic SMS delivery, WhatsApp messaging, international voice calls, verification OTPs, and SIP trunking.",
+    icon: Phone,
+    accent: "#f22f46",
+    badge: "Telecom",
+    tags: ["Programmatic SMS", "Voice Calls", "WhatsApp API", "OTP Verify"],
+    docsUrl: "https://www.twilio.com/docs",
+    connectUrl: "https://console.twilio.com",
+  },
+  {
+    id: "sendgrid",
+    name: "SendGrid Email API",
+    category: "productivity",
+    description: "Enterprise transactional email delivery, marketing automation, dynamic handlebars templates, and SMTP relays.",
+    icon: Mail,
+    accent: "#1a82e2",
+    tags: ["Transactional Email", "SMTP Relay", "Dynamic Templates", "Deliverability"],
+    docsUrl: "https://docs.sendgrid.com",
+    connectUrl: "https://app.sendgrid.com",
+  },
+  {
+    id: "puppeteer",
+    name: "Puppeteer Browser Automation",
+    category: "ai",
+    description: "Headless Chrome automation, full-page screenshot rendering, PDF generation, and client-side SPA web scraping.",
+    icon: SiPuppeteer,
+    accent: "#00d8a2",
+    badge: "Headless Web",
+    tags: ["Headless Chrome", "Web Scraping", "DOM Automation", "PDF Render"],
+    docsUrl: "https://pptr.dev",
+    connectUrl: "https://pptr.dev",
+  },
+  {
+    id: "playwright",
+    name: "Playwright Browser Suite",
+    category: "ai",
+    description: "Cross-browser end-to-end automation, multi-tab web agents, network request interception, and resilient locators.",
+    icon: Globe,
+    accent: "#2eade2",
+    badge: "Browser Agent",
+    tags: ["Cross-browser", "Agent Scraping", "Network Mock", "Auto-waiting"],
+    docsUrl: "https://playwright.dev/docs/intro",
+    connectUrl: "https://playwright.dev",
+  },
+  {
+    id: "tavily",
+    name: "Tavily AI Search Engine",
+    category: "ai",
+    description: "Search engine purpose-built for AI agents, aggregated factual results, clean markdown extraction, and source ranking.",
+    icon: Globe,
+    accent: "#5046e5",
+    badge: "AI Search",
+    tags: ["Agent Search", "Factual Results", "Clean Markdown", "Real-time Web"],
+    docsUrl: "https://docs.tavily.com",
+    connectUrl: "https://tavily.com",
+  },
+  {
+    id: "firecrawl",
+    name: "Firecrawl Web Scraper",
+    category: "ai",
+    description: "Turns entire websites into clean LLM-ready markdown, recursive site crawler, JS execution, and subpage discovery.",
+    icon: Flame,
+    accent: "#ff5a1f",
+    badge: "Web Crawler",
+    tags: ["Clean Markdown", "Recursive Crawler", "Site Extraction", "LLM-Ready"],
+    docsUrl: "https://docs.firecrawl.dev",
+    connectUrl: "https://firecrawl.dev",
+  },
+  {
+    id: "exa",
+    name: "Exa Neural Search",
+    category: "ai",
+    description: "Neural embeddings web search engine, semantic link filtering, similar URL search, and web knowledge extraction.",
+    icon: Compass,
+    accent: "#7c3aed",
+    tags: ["Neural Search", "Embeddings Web", "Semantic Filtering", "Similar URLs"],
+    docsUrl: "https://docs.exa.ai",
+    connectUrl: "https://exa.ai",
+  },
+  {
+    id: "langsmith",
+    name: "LangSmith Observability",
+    category: "ai",
+    description: "Agent trajectory tracing, prompt evaluation benchmarks, execution step debugging, and token usage monitoring.",
+    icon: Workflow,
+    accent: "#1c3c3c",
+    badge: "Agent Tracing",
+    tags: ["Agent Traces", "Evaluation Benchmarks", "Prompt Debugging", "Token Monitoring"],
+    docsUrl: "https://docs.smith.langchain.com",
+    connectUrl: "https://smith.langchain.com",
+  },
+  {
+    id: "openrouter",
+    name: "OpenRouter Gateway",
+    category: "ai",
+    description: "Unified inference routing across 100+ open-weights and proprietary models with automatic fallback and failover.",
+    icon: Cpu,
+    accent: "#6366f1",
+    badge: "Unified Gateway",
+    tags: ["Model Router", "Auto Fallback", "Unified API", "Open Weights"],
+    docsUrl: "https://openrouter.ai/docs",
+    connectUrl: "https://openrouter.ai",
+  },
+  {
+    id: "groq",
+    name: "Groq LPU Inference",
+    category: "ai",
+    description: "Ultra-fast Language Processing Units (LPU), instantaneous token streaming, sub-second latency, and fast reasoning.",
+    icon: Zap,
+    accent: "#f55036",
+    badge: "Ultra Fast",
+    tags: ["LPU Inference", "Sub-second Streaming", "Low Latency", "High Throughput"],
+    docsUrl: "https://console.groq.com/docs",
+    connectUrl: "https://console.groq.com",
+  },
+  {
+    id: "cerebras",
+    name: "Cerebras Inference",
+    category: "ai",
+    description: "Wafer-scale AI inference, record-breaking token generation speeds, massive throughput, and large context windows.",
+    icon: Cpu,
+    accent: "#ff7849",
+    badge: "Wafer Scale",
+    tags: ["Wafer Scale Engine", "Peak Tokens/Sec", "High Concurrency", "Massive Bandwidth"],
+    docsUrl: "https://inference-docs.cerebras.ai",
+    connectUrl: "https://cloud.cerebras.ai",
+  },
+  {
+    id: "mistralplatform",
+    name: "Mistral Platform",
+    category: "ai",
+    description: "Enterprise open-weights models, Codestral code generation, function calling APIs, and low-latency JSON mode.",
+    icon: Layers,
+    accent: "#ff7000",
+    badge: "Open Weights",
+    tags: ["Codestral", "Function Calling", "JSON Mode", "Low Latency"],
+    docsUrl: "https://docs.mistral.ai",
+    connectUrl: "https://console.mistral.ai",
+  },
+  {
+    id: "deepgram",
+    name: "Deepgram Speech AI",
+    category: "ai",
+    description: "Real-time speech-to-text audio intelligence, Nova-2 models, speaker diarization, and multilingual voice recognition.",
+    icon: Radio,
+    accent: "#13ef93",
+    tags: ["Speech-to-Text", "Nova-2", "Audio Intelligence", "Speaker Diarization"],
+    docsUrl: "https://developers.deepgram.com",
+    connectUrl: "https://console.deepgram.com",
+  },
+  {
+    id: "elevenlabs",
+    name: "ElevenLabs Voice Synthesis",
+    category: "ai",
+    description: "Hyper-realistic voice generation, emotional nuance tuning, voice cloning, and multi-speaker conversational audio.",
+    icon: Radio,
+    accent: "#000000",
+    badge: "Voice AI",
+    tags: ["Voice Synthesis", "Voice Cloning", "Emotional Nuance", "Multilingual Speech"],
+    docsUrl: "https://elevenlabs.io/docs",
+    connectUrl: "https://elevenlabs.io",
+  },
+  {
+    id: "pipedrive",
+    name: "Pipedrive Sales CRM",
+    category: "productivity",
+    description: "Visual sales pipeline management, deal stage progression, contact timeline synchronization, and activity reminders.",
+    icon: TrendingUp,
+    accent: "#00b862",
+    tags: ["Sales Pipeline", "Deal Tracking", "Activity Reminders", "CRM Sync"],
+    docsUrl: "https://pipedrive.readme.io",
+    connectUrl: "https://app.pipedrive.com",
   },
 ];
 
