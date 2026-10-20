@@ -3,12 +3,12 @@ import { TiltCard } from "./TiltCard";
 import { useOnScreen } from "@/hooks/useOnScreen";
 
 const models = [
-  { name: "GPT", spec: "Generalist reasoning", ctx: "400K ctx", tone: "from-cyan-400/30" },
-  { name: "Claude", spec: "Long-form analysis", ctx: "2M ctx", tone: "from-violet-500/30" },
-  { name: "Gemini", spec: "Multimodal vision", ctx: "1M ctx", tone: "from-sky-400/30" },
-  { name: "Llama", spec: "Private deployment", ctx: "128K ctx", tone: "from-teal-400/30" },
-  { name: "DeepSeek", spec: "Math & code depth", ctx: "256K ctx", tone: "from-indigo-400/30" },
-  { name: "Mistral", spec: "Low-latency routing", ctx: "64K ctx", tone: "from-fuchsia-400/30" },
+  { name: "Neura Ultra", spec: "Generalist neural reasoning", ctx: "400K ctx", tone: "from-cyan-400/30" },
+  { name: "Neura DeepMind", spec: "Long-form architectural analysis", ctx: "2M ctx", tone: "from-violet-500/30" },
+  { name: "Neura Omni", spec: "Multimodal visual perception", ctx: "1M ctx", tone: "from-sky-400/30" },
+  { name: "Neura Edge", spec: "Private on-device deployment", ctx: "128K ctx", tone: "from-teal-400/30" },
+  { name: "Neura Quantum", spec: "Complex math & code synthesis", ctx: "256K ctx", tone: "from-indigo-400/30" },
+  { name: "Neura Hyper-Speed", spec: "Sub-15ms low-latency dispatch", ctx: "64K ctx", tone: "from-fuchsia-400/30" },
 ];
 
 function ModelCard({ m }: { m: (typeof models)[number] }) {

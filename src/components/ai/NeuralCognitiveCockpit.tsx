@@ -46,7 +46,7 @@ const SCENARIOS: Scenario[] = [
   {
     id: "reasoning",
     badge: "QUANTUM REASONING",
-    model: "DeepSeek R1",
+    model: "Neura DeepMind",
     provider: "Reasoning Cluster",
     icon: Brain,
     prompt: "Prove P ≠ NP under relativized oracle constraints and derive quantum lower bounds",
@@ -84,7 +84,7 @@ export async function verifySeparation() {
   {
     id: "swarm",
     badge: "AUTONOMOUS AGENTS",
-    model: "Claude 3.7",
+    model: "Neura Ultra Core",
     provider: "Swarm Orchestrator",
     icon: Workflow,
     prompt: "Deploy an autonomous 5-node distributed microservice with zero-downtime canary rollback",
@@ -121,7 +121,7 @@ console.log('Swarm alive at 0.000% packet loss.');`,
   {
     id: "shader",
     badge: "NEURAL VISUAL SHADER",
-    model: "GPT-4o Omni",
+    model: "Neura Omni Matrix",
     provider: "Vision & GPU Synthesis",
     icon: Eye,
     prompt: "Synthesize a real-time reactive black-hole accretion disk with gravitational lensing",
@@ -155,9 +155,9 @@ void main() {
     previewType: "shader",
   },
   {
-    id: "groq",
+    id: "stream",
     badge: "LIGHTSPEED STREAM",
-    model: "Groq Llama 3.3",
+    model: "Neura Hyper-Speed LPU",
     provider: "LPU Tensor Cluster",
     icon: Zap,
     prompt: "Stream full-duplex conversational voice with sub-80ms emotional prosody modulation",
@@ -166,17 +166,17 @@ void main() {
     speedTokSec: 425,
     latencyMs: 6,
     thoughts: [
-      { time: "0.02s", text: "Groq LPU Array warm: TTFT 6.2ms. Phoneme stream received.", tag: "RAW_SPEED" },
+      { time: "0.02s", text: "Neura LPU Array warm: TTFT 6.2ms. Phoneme stream received.", tag: "RAW_SPEED" },
       { time: "0.15s", text: "Phonetic emotional prosody synthesis: Empathy quotient 0.94.", tag: "PROSODY" },
       { time: "0.28s", text: "Synthesizing 48kHz float32 vocoder frames at 425 tokens per second.", tag: "AUDIO_SYNTH" },
       { time: "0.41s", text: "Zero-wait packet dispatch over direct UDP socket. Latency target achieved.", tag: "DELIVERED" },
     ],
-    code: `// Groq LPU Voice Streaming Core
-import { GroqLPU, VoiceDuplex } from '@neura/groq';
+    code: `// Neura LPU Voice Streaming Core
+import { NeuraLPU, VoiceDuplex } from '@neura/voice';
 
-const session = await GroqLPU.createDuplexStream({
-  model: 'llama-3.3-70b-versatile',
-  hardware: 'GroqRack-LPU',
+const session = await NeuraLPU.createDuplexStream({
+  model: 'neura-voice-duplex-v3',
+  hardware: 'NeuraRack-LPU',
   audio: {
     sampleRate: 48000,
     emotionalCadence: 'adaptive',

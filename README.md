@@ -15,12 +15,12 @@
 ### 1. 5 Modular Dedicated Pages
 - **🏠 Overview (`/`)**: Interactive Living Neural Core with real-time audio waveforms, telemetry metrics, social proof, and ecosystem navigation cards.
 - **⚡ Capabilities (`/features`)**: Dual-engine duplex speech, live side-by-side code execution canvas, autonomous vector memory, and WebGPU acceleration.
-- **🧠 Model Mesh (`/models`)**: Real-time intent routing between **Nemotron 3 Ultra 550B**, **Claude 3.7 Sonnet**, **Gemini 2.5 Flash 1M**, and **Groq Llama 3.3**, plus latency speed benchmarks.
+- **🧠 Model Mesh (`/models`)**: Real-time intent routing between **Neura Ultra Core**, **Neura DeepMind**, **Neura Omni Vision**, and **Neura Hyper-Speed LPUs**, plus latency speed benchmarks.
 - **🔌 Integrations (`/integrations`)**: 15+ developer tools, databases, and cloud connectors (GitHub, VS Code, Supabase, Docker, Slack, Redis, Discord, AWS) with interactive code snippets.
 - **💳 Pricing & Plans (`/pricing`)**: Interactive workload slider, Free Explorer tier ($0), Neura Pro ($12/mo) with instant checkout modal, and Enterprise consultation dialog.
 
 ### 2. Neura Intelligence Workspace (`/app`)
-- **ChatGPT & Claude Hybrid UX**: Reasoning disclosure accordions, message editing, code copy, and prompt enhancement.
+- **Next-Gen Conversational UX**: Reasoning disclosure accordions, message editing, code copy, and prompt enhancement.
 - **Split-Screen Interactive Canvas**: Run code, preview React components, and execute actions with instant AST verification.
 - **Multi-Model Intent Router**: Seamlessly switch between frontier models without losing chat memory or context.
 - **File Attachments**: Upload documents, source code, and images with automatic token counting and badge management.
@@ -36,7 +36,7 @@
 - **Framework**: [TanStack Start](https://tanstack.com/start) + [TanStack Router](https://tanstack.com/router)
 - **UI Library**: React 19 + Tailwind CSS + Framer Motion
 - **Icons**: Lucide React + React Icons (Heroicons, Simple Icons)
-- **Local Inference**: WebGPU MLCEngine (Qwen / Llama 596M parameters)
+- **Local Inference**: WebGPU MLCEngine (Neura Edge 596M parameters)
 - **Package Manager**: pnpm
 
 ---

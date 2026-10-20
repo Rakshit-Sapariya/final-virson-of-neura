@@ -81,15 +81,15 @@ const MODELS: ModelChoice[] = [
   {
     id: "neura-pro",
     name: "Neura 3.5 Pro",
-    tag: "nemotron-550b",
-    badge: "550B Reasoning",
+    tag: "ultra-deep",
+    badge: "Deep Reasoning",
     description: "Deep multi-step reasoning, mathematical proof, & fullstack architecture",
     tier: "deep",
   },
   {
     id: "neura-balanced",
     name: "Neura Balanced",
-    tag: "gemini-2.5-flash",
+    tag: "omni-vision",
     badge: "1M Context",
     description: "Everyday analysis, writing, and comprehensive synthesis",
     tier: "balanced",
@@ -97,7 +97,7 @@ const MODELS: ModelChoice[] = [
   {
     id: "neura-speed",
     name: "Neura Speed",
-    tag: "groq-llama-3.3",
+    tag: "hyper-speed",
     badge: "Ultra-Fast LPU",
     description: "Near-instant code edits, translations, & rapid queries",
     tier: "fast",
@@ -273,12 +273,12 @@ function AppPage() {
         content: `Neura 3.5 Pro combines multi-model routing with dedicated high-speed LPUs and deep reasoning engines.
 
 ### Key Architectural Pillars:
-1. **Dynamic Intent Routing**: Fast queries route to sub-second LPUs (Groq Llama 3.3), while deep reasoning queries execute through **Nemotron 3 Ultra 550B** or **Claude 3.7 Sonnet**.
+1. **Dynamic Intent Routing**: Fast queries route to sub-second LPUs, while deep reasoning queries execute through **Neura Ultra Deep Core**.
 2. **Side-by-Side Artifacts Canvas**: Code, markdown briefs, and interactive UI preview side-by-side with live hot reloading.
 3. **Privacy & BYOK**: Direct client-to-engine API pass-through with zero model telemetry.
 
 Would you like to generate a sample fullstack component to test the Canvas view?`,
-        model: "Neura Pro (Nemotron 550B)",
+        model: "Neura Pro Deep Engine",
         reasoning: "Analyzed architectural strengths: latency hierarchy, intent router, multi-model cluster, and Canvas split-view.",
         created_at: new Date(Date.now() - 240000).toISOString(),
       },
@@ -478,13 +478,13 @@ Would you like to generate a sample fullstack component to test the Canvas view?
       }
 
       if (/\b(code|react|component|function|typescript|dashboard|ui|canvas)\b/i.test(lower)) {
-        replyContent = `Here is a complete, production-ready implementation tailored for Neura:\n\n\`\`\`tsx\nimport React, { useState } from 'react';\nimport { Sparkles, Activity, ShieldCheck } from 'lucide-react';\n\nexport function NeuraAnalyticsCard() {\n  const [active, setActive] = useState(true);\n  \n  return (\n    <div className="p-6 rounded-2xl border border-cyan-500/20 bg-background/80 backdrop-blur-md shadow-xl">\n      <div className="flex items-center justify-between mb-4">\n        <div className="flex items-center gap-3">\n          <span className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400">\n            <Sparkles className="w-5 h-5" />\n          </span>\n          <div>\n            <h3 className="font-semibold text-foreground text-sm">Neural Core Performance</h3>\n            <p className="text-xs text-muted-foreground">High-throughput reasoning active</p>\n          </div>\n        </div>\n        <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 font-medium">\n          99.98% Latency\n        </span>\n      </div>\n      <p className="text-sm text-muted-foreground leading-relaxed">\n        Streamlined execution via Nemotron 3 Ultra and Groq LPU routing pipeline.\n      </p>\n    </div>\n  );\n}\n\`\`\`\n\nYou can click **Open in Canvas** on this code block to preview it side-by-side!`;
+        replyContent = `Here is a complete, production-ready implementation tailored for Neura:\n\n\`\`\`tsx\nimport React, { useState } from 'react';\nimport { Sparkles, Activity, ShieldCheck } from 'lucide-react';\n\nexport function NeuraAnalyticsCard() {\n  const [active, setActive] = useState(true);\n  \n  return (\n    <div className="p-6 rounded-2xl border border-cyan-500/20 bg-background/80 backdrop-blur-md shadow-xl">\n      <div className="flex items-center justify-between mb-4">\n        <div className="flex items-center gap-3">\n          <span className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400">\n            <Sparkles className="w-5 h-5" />\n          </span>\n          <div>\n            <h3 className="font-semibold text-foreground text-sm">Neural Core Performance</h3>\n            <p className="text-xs text-muted-foreground">High-throughput reasoning active</p>\n          </div>\n        </div>\n        <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 font-medium">\n          99.98% Latency\n        </span>\n      </div>\n      <p className="text-sm text-muted-foreground leading-relaxed">\n        Streamlined execution via Neura Ultra Core and Dedicated LPU routing pipeline.\n      </p>\n    </div>\n  );\n}\n\`\`\`\n\nYou can click **Open in Canvas** on this code block to preview it side-by-side!`;
 
         // Auto-open in canvas
         setActiveArtifact({
           title: "NeuraAnalyticsCard.tsx",
           language: "tsx",
-          code: `import React, { useState } from 'react';\nimport { Sparkles, Activity, ShieldCheck } from 'lucide-react';\n\nexport function NeuraAnalyticsCard() {\n  const [active, setActive] = useState(true);\n  \n  return (\n    <div className="p-6 rounded-2xl border border-cyan-500/20 bg-slate-900/80 backdrop-blur-md text-white shadow-xl">\n      <div className="flex items-center justify-between mb-4">\n        <div className="flex items-center gap-3">\n          <span className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400">\n            <Sparkles className="w-5 h-5" />\n          </span>\n          <div>\n            <h3 className="font-semibold text-sm">Neural Core Performance</h3>\n            <p className="text-xs text-slate-400">High-throughput reasoning active</p>\n          </div>\n        </div>\n        <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 font-medium">\n          99.98% Latency\n        </span>\n      </div>\n      <p className="text-sm text-slate-300 leading-relaxed">\n        Streamlined execution via Nemotron 3 Ultra and Groq LPU routing pipeline.\n      </p>\n    </div>\n  );\n}`,
+          code: `import React, { useState } from 'react';\nimport { Sparkles, Activity, ShieldCheck } from 'lucide-react';\n\nexport function NeuraAnalyticsCard() {\n  const [active, setActive] = useState(true);\n  \n  return (\n    <div className="p-6 rounded-2xl border border-cyan-500/20 bg-slate-900/80 backdrop-blur-md text-white shadow-xl">\n      <div className="flex items-center justify-between mb-4">\n        <div className="flex items-center gap-3">\n          <span className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400">\n            <Sparkles className="w-5 h-5" />\n          </span>\n          <div>\n            <h3 className="font-semibold text-sm">Neural Core Performance</h3>\n            <p className="text-xs text-slate-400">High-throughput reasoning active</p>\n          </div>\n        </div>\n        <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 font-medium">\n          99.98% Latency\n        </span>\n      </div>\n      <p className="text-sm text-slate-300 leading-relaxed">\n        Streamlined execution via Neura Ultra Core and Dedicated LPU routing pipeline.\n      </p>\n    </div>\n  );\n}`,
         });
       } else {
         replyContent = `I have processed your request using **${selectedModel.name}**.\n\n- **Inference Mode**: ${selectedModel.badge}\n- **Context Capacity**: ${selectedModel.description}\n- **Web Search**: ${webSearchActive ? "Verified live sources" : "Knowledge repository"}\n\nIs there a specific architecture, document, or feature you'd like me to build next?`;
@@ -1019,7 +1019,7 @@ Would you like to generate a sample fullstack component to test the Canvas view?
                             icon: Zap,
                             title: "High-Speed Inference",
                             prompt:
-                              "Compare performance and latency of Groq LPU vs NVIDIA H100 LPUs",
+                              "Evaluate real-time token throughput across Edge LPUs vs Tensor Clusters",
                           },
                           {
                             icon: Brain,
@@ -1100,7 +1100,7 @@ Would you like to generate a sample fullstack component to test the Canvas view?
                 </div>
               </div>
 
-              {/* Floating Bottom Composer Dock (ChatGPT Style) */}
+              {/* Floating Bottom Composer Dock */}
               <div className="p-4 bg-gradient-to-t from-background via-background/90 to-transparent">
                 <form onSubmit={submit} className="mx-auto max-w-3xl">
                   <div className="relative rounded-3xl border border-border/80 bg-background/90 backdrop-blur-xl shadow-2xl p-2.5 transition-all focus-within:border-cyan-500/60 focus-within:ring-2 focus-within:ring-cyan-500/10">
@@ -1217,7 +1217,7 @@ Would you like to generate a sample fullstack component to test the Canvas view?
             </div>
           )}
 
-          {/* Claude-style Side-by-side Artifacts / Canvas Drawer */}
+          {/* Side-by-side Artifacts / Canvas Drawer */}
           {canvasOpen && (
             <aside className="w-full sm:w-[480px] lg:w-[560px] border-l border-border/70 bg-[#090a0f] flex flex-col h-full z-20 animate-in slide-in-from-right duration-300">
               {/* Canvas Header */}
@@ -1346,7 +1346,7 @@ Would you like to generate a sample fullstack component to test the Canvas view?
 }
 
 /**
- * MessageBubble Component with Claude-style Reasoning Accordion
+ * MessageBubble Component with Reasoning Accordion
  * and Syntax-highlighted code blocks with Canvas link.
  */
 const MessageBubble = memo(function MessageBubble({
@@ -1399,7 +1399,7 @@ const MessageBubble = memo(function MessageBubble({
           </div>
         )}
 
-        {/* Reasoning / Thought Dropdown (Claude 3.7 / DeepSeek R1 Style) */}
+        {/* Reasoning / Thought Dropdown */}
         {reasoning && (
           <div className="rounded-xl border border-indigo-500/20 bg-indigo-950/20 overflow-hidden text-xs">
             <button

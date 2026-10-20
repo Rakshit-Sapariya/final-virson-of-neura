@@ -55,10 +55,10 @@ const pages = [
     title: "Model Mesh & Cognitive Routing",
     path: "/models",
     icon: HiCpuChip,
-    badge: "550B Nemotron · Claude 3.7",
+    badge: "Ultra Core · Deep Mind",
     color: "#c084fc",
     description:
-      "Explore dynamic intent routing across 19 global edge clusters, sub-15ms Groq LPUs, and private in-browser WebGPU.",
+      "Explore dynamic intent routing across 19 global edge clusters, sub-15ms Edge LPUs, and private in-browser WebGPU.",
   },
   {
     pageNumber: "04",
@@ -163,7 +163,7 @@ function Index() {
               Step into the intelligence layer today
             </h2>
             <p className="max-w-xl mx-auto text-sm text-muted-foreground mb-8">
-              Experience the dual-engine voice model, real-time code generation, and 550B Nemotron-3 Ultra reasoning.
+              Experience the dual-engine voice model, real-time code generation, and deep autonomous neural reasoning.
             </p>
             <div className="flex justify-center gap-4">
               <Link

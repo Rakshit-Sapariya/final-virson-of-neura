@@ -35,8 +35,8 @@ interface ModelNode {
 
 const EXPERT_MODELS: ModelNode[] = [
   {
-    id: "deepseek-r1",
-    name: "DeepSeek R1",
+    id: "neura-deepmind",
+    name: "Neura DeepMind",
     provider: "Reasoning Engine",
     specialty: "Mathematical Logic & Deep Reasoning",
     color: "#6ee7ff",
@@ -50,8 +50,8 @@ const EXPERT_MODELS: ModelNode[] = [
     description: "Multi-head latent attention reasoning cluster synthesizing complex multi-step deductions.",
   },
   {
-    id: "claude-3-7",
-    name: "Claude 3.7",
+    id: "neura-ultra",
+    name: "Neura Ultra",
     provider: "Code Architecture",
     specialty: "Full-Stack & Systems Engineering",
     color: "#c084fc",
@@ -65,8 +65,8 @@ const EXPERT_MODELS: ModelNode[] = [
     description: "Deep code analysis, semantic refactoring, and AST verification with extended context.",
   },
   {
-    id: "gpt-4o",
-    name: "GPT-4o Omni",
+    id: "neura-omni",
+    name: "Neura Omni",
     provider: "Multimodal Vision",
     specialty: "Spatial, Video & Audio Perception",
     color: "#34d399",
@@ -80,8 +80,8 @@ const EXPERT_MODELS: ModelNode[] = [
     description: "Real-time cross-modal sensory fusion bridging vision, audio waveforms, and token streams.",
   },
   {
-    id: "groq-llama",
-    name: "Groq Llama 3.3",
+    id: "neura-speed",
+    name: "Neura Hyper-Speed",
     provider: "Hyper-Router",
     specialty: "Ultra-Fast Inference & Routing",
     color: "#fbbf24",
@@ -116,7 +116,7 @@ export function LivingNeuralCore() {
   const { tier, coarsePointer } = usePerfTier();
   const isLowEnd = tier === "very-low" || tier === "low";
 
-  const [activeModelId, setActiveModelId] = useState<string>("deepseek-r1");
+  const [activeModelId, setActiveModelId] = useState<string>("neura-deepmind");
   const [isPulsing, setIsPulsing] = useState<boolean>(false);
   const [pulseCount, setPulseCount] = useState<number>(0);
   const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });

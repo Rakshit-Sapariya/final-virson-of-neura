@@ -185,7 +185,7 @@ function PricingPage() {
               Need custom VPC or dedicated on-premises hardware?
             </h2>
             <p className="max-w-xl mx-auto text-sm text-muted-foreground mb-8">
-              We deploy air-gapped private clusters on AWS, GCP, Azure, or bare-metal Groq LPUs with 100% data residency guarantees and zero telemetry.
+              We deploy air-gapped private clusters on AWS, GCP, Azure, or bare-metal Dedicated LPUs with 100% data residency guarantees and zero telemetry.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link

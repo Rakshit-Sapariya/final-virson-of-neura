@@ -37,7 +37,7 @@ const TIERS: TierData[] = [
     label: "Pro MoE",
     badge: "DISTRIBUTED",
     specs: [
-      { k: "Model footprint", v: "70B MoE", sub: "DeepSeek + Claude hybrid mesh", icon: Cpu },
+      { k: "Model footprint", v: "70B MoE", sub: "High-precision neural expert mesh", icon: Cpu },
       { k: "Context window", v: "128,000 tokens", sub: "Full code repository memory", icon: Layers },
       { k: "Monthly allowance", v: "Unlimited", sub: "Priority high-throughput pipe", icon: Zap },
       { k: "Stream throughput", v: "8,192 tokens", sub: "Parallel expert generation", icon: Activity },

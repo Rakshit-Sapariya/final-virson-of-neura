@@ -3,7 +3,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { MLCEngineInterface } from "@mlc-ai/web-llm";
 
-/** 596M-parameter model (Qwen3-0.6B) that runs fully on-device via WebGPU. */
+/** 596M-parameter neural model that runs fully on-device via WebGPU. */
 const LITE_MODEL = "Qwen3-0.6B-q4f16_1-MLC";
 const LITE_LABEL = "Neura Lite (596M params, on-device)";
 /** Small on-device context: last few turns only. */
@@ -11,7 +11,7 @@ const MAX_TURNS = 8;
 
 type Msg = { role: "user" | "assistant"; content: string };
 
-/** Strip Qwen3 thinking blocks so only the answer is shown. */
+/** Strip internal reasoning blocks so only the answer is shown. */
 const clean = (t: string) => t.replace(/<think>[\s\S]*?(<\/think>|$)/g, "").trimStart();
 
 export function LiteChat({ onExit }: { onExit: () => void }) {
@@ -96,7 +96,7 @@ export function LiteChat({ onExit }: { onExit: () => void }) {
               <p className="font-display text-xs tracking-[0.3em] text-primary">LITE MODE</p>
               <h2 className="mt-3 font-display text-xl font-semibold">Tiny AI, on your device</h2>
               <p className="mt-3 text-sm text-muted-foreground">
-                A 596M-parameter model (Qwen3-0.6B) runs right in your browser, with a 32,768-token
+                A 596M-parameter compact neural engine runs right in your browser, with a 32,768-token
                 memory of the current chat. Free, private, and doesn't use your monthly messages.
                 Chats here aren't saved. Answers are simpler than the main AI.
               </p>

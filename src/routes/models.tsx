@@ -12,7 +12,7 @@ import { HiCpuChip, HiArrowRight, HiBolt } from "react-icons/hi2";
 
 const title = "Model Mesh & Dynamic Routing — NEURA - TECH";
 const description =
-  "Explore Neura's dynamic multi-model mesh: Nemotron 3 Ultra 550B, Claude 3.7 Sonnet, Gemini 2.5 Flash 1M, Groq LPUs, and private WebGPU in-browser inference.";
+  "Explore Neura's dynamic multi-tier neural mesh: Neura Ultra, Neura DeepMind, Neura Omni Vision, Hyper-Speed LPUs, and private WebGPU in-browser inference.";
 
 export const Route = createFileRoute("/models")({
   head: () => ({
@@ -98,7 +98,7 @@ function ModelsPage() {
               Switch models mid-conversation with zero friction
             </h2>
             <p className="max-w-xl mx-auto text-sm text-muted-foreground mb-8">
-              Start with sub-second Groq Llama 3.3 for quick brainstorming, switch seamlessly to Nemotron-3 Ultra 550B
+              Start with sub-second Neura Hyper-Speed LPUs for quick brainstorming, switch seamlessly to Neura Ultra Deep Core
               for complex math proofs, and keep your full memory intact.
             </p>
             <div className="flex justify-center gap-4">

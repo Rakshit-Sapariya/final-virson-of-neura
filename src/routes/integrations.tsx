@@ -237,7 +237,7 @@ const INTEGRATIONS: Integration[] = [
     name: "WebGPU Local Inference",
     category: "ai",
     description:
-      "100% offline, zero-network private inference powered by on-device GPU acceleration using quantized Qwen/Llama models.",
+      "100% offline, zero-network private inference powered by on-device GPU acceleration using quantized Neura Edge weights.",
     icon: Cpu,
     accent: "#6ee7ff",
     badge: "Zero-Latency",

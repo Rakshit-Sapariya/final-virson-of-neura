@@ -44,7 +44,7 @@ const plans = [
     recommendedThreshold: 20000,
     features: [
       { text: "Unlimited messages", detail: "Zero throttling, zero queue wait times" },
-      { text: "Full model mesh + reasoning", detail: "DeepSeek R1 + Claude 3.7 + GPT-4o + Groq" },
+      { text: "Full neural mesh + reasoning", detail: "Neura Ultra + Neura DeepMind + Omni Vision + LPUs" },
       { text: "Persistent memory & agents", detail: "Lifelong cross-session vector embeddings" },
       { text: "Image and code generation", detail: "4K synthesis & full-stack code sandboxes" },
       { text: "Priority edge inference", detail: "Sub-15ms direct LPU tensor routing" },
@@ -489,7 +489,7 @@ export function Pricing() {
 
               <h3 className="text-2xl font-bold text-white">Upgrade to Neura Pro</h3>
               <p className="text-xs text-slate-400 mt-1">
-                Unlock 550B Nemotron-3 Ultra, 19 Global Edge LPUs, and real-time Canvas preview.
+                Unlock Neura Ultra Deep Core, 19 Global Edge LPUs, and real-time Canvas preview.
               </p>
 
               <div className="mt-5 p-4 rounded-2xl bg-white/[0.03] border border-white/10 flex items-baseline justify-between">
@@ -511,8 +511,8 @@ export function Pricing() {
 
               <div className="mt-4 space-y-2">
                 {[
-                  "Unlimited Nemotron-3 Ultra 550B & Claude 3.7 access",
-                  "19 Global Edge LPU routing clusters (Groq sub-second)",
+                  "Unlimited Neura Ultra & DeepMind reasoning access",
+                  "19 Global Edge LPU routing clusters (sub-second)",
                   "Persistent Vector Memory (10M token indexing)",
                   "Side-by-side interactive Canvas runtime preview",
                 ].map((feat, i) => (
@@ -645,7 +645,7 @@ export function Pricing() {
                         <option value="Dedicated Cloud VPC">Dedicated Cloud VPC</option>
                         <option value="Air-Gapped On-Premises">Air-Gapped On-Premises</option>
                         <option value="Hybrid Multi-Cloud">Hybrid Multi-Cloud</option>
-                        <option value="Custom Hardware (Groq/SambaNova)">Dedicated LPU Hardware</option>
+                        <option value="Dedicated LPU Hardware">Dedicated LPU Hardware</option>
                       </select>
                     </div>
                   </div>
