@@ -65,6 +65,7 @@ type Integration = {
   popular?: boolean;
   connected?: boolean;
   docsUrl: string;
+  connectUrl: string;
 };
 
 const INTEGRATIONS: Integration[] = [
@@ -79,7 +80,8 @@ const INTEGRATIONS: Integration[] = [
     badge: "Official",
     tags: ["Code Review", "PR Synthesis", "Webhooks"],
     popular: true,
-    docsUrl: "https://github.com",
+    docsUrl: "https://docs.github.com",
+    connectUrl: "https://github.com/settings/connections/applications",
   },
   {
     id: "vscode",
@@ -93,6 +95,7 @@ const INTEGRATIONS: Integration[] = [
     tags: ["Autocomplete", "Diagnostics", "Zero-Latency"],
     popular: true,
     docsUrl: "https://code.visualstudio.com",
+    connectUrl: "https://marketplace.visualstudio.com",
   },
   {
     id: "supabase",
@@ -106,6 +109,7 @@ const INTEGRATIONS: Integration[] = [
     tags: ["pgvector", "Realtime Sync", "Edge Auth"],
     popular: true,
     docsUrl: "https://supabase.com",
+    connectUrl: "https://supabase.com/dashboard/project/_/settings/api",
   },
   {
     id: "docker",
@@ -117,6 +121,7 @@ const INTEGRATIONS: Integration[] = [
     accent: "#2496ed",
     tags: ["Containers", "Telemetry", "CI/CD"],
     docsUrl: "https://docker.com",
+    connectUrl: "https://hub.docker.com/settings/security",
   },
   {
     id: "terminal",
@@ -129,7 +134,8 @@ const INTEGRATIONS: Integration[] = [
     badge: "CLI v2.4",
     tags: ["Shell Integration", "Local Files", "POSIX/Win"],
     popular: true,
-    docsUrl: "#cli",
+    docsUrl: "https://github.com/Rakshit-Sapariya/final-virson-of-neura",
+    connectUrl: "https://github.com/Rakshit-Sapariya/final-virson-of-neura#getting-started",
   },
   {
     id: "slack",
@@ -141,6 +147,7 @@ const INTEGRATIONS: Integration[] = [
     accent: "#e01e5a",
     tags: ["Bot Assistant", "Thread Summaries", "Enterprise"],
     docsUrl: "https://slack.com",
+    connectUrl: "https://api.slack.com/apps",
   },
   {
     id: "discord",
@@ -151,7 +158,8 @@ const INTEGRATIONS: Integration[] = [
     icon: SiDiscord,
     accent: "#5865f2",
     tags: ["Voice AI", "Community", "Slash Commands"],
-    docsUrl: "https://discord.com",
+    docsUrl: "https://discord.com/developers/docs",
+    connectUrl: "https://discord.com/developers/applications",
   },
   {
     id: "notion",
@@ -165,6 +173,7 @@ const INTEGRATIONS: Integration[] = [
     tags: ["Knowledge Base", "Documentation", "Wikis"],
     popular: true,
     docsUrl: "https://notion.so",
+    connectUrl: "https://www.notion.so/profile/integrations",
   },
   {
     id: "linear",
@@ -176,6 +185,7 @@ const INTEGRATIONS: Integration[] = [
     accent: "#5e6ad2",
     tags: ["Issue Tracking", "Sprint Velocity", "Auto-Triage"],
     docsUrl: "https://linear.app",
+    connectUrl: "https://linear.app/settings/api",
   },
   {
     id: "figma",
@@ -187,6 +197,7 @@ const INTEGRATIONS: Integration[] = [
     accent: "#f24e1e",
     tags: ["Design-to-Code", "Tokens", "Canvas Sync"],
     docsUrl: "https://figma.com",
+    connectUrl: "https://www.figma.com/settings",
   },
   {
     id: "postgresql",
@@ -198,6 +209,7 @@ const INTEGRATIONS: Integration[] = [
     accent: "#336791",
     tags: ["SQL Generation", "EXPLAIN Analysis", "Connection Pool"],
     docsUrl: "https://postgresql.org",
+    connectUrl: "https://www.postgresql.org/docs/current/auth-pg-hba-conf.html",
   },
   {
     id: "redis",
@@ -209,6 +221,7 @@ const INTEGRATIONS: Integration[] = [
     accent: "#dc382d",
     tags: ["Semantic Cache", "Rate Limiting", "KV Store"],
     docsUrl: "https://redis.io",
+    connectUrl: "https://redis.io/docs/latest/operate/oss_and_stack/management/security/",
   },
   {
     id: "googlecloud",
@@ -220,6 +233,7 @@ const INTEGRATIONS: Integration[] = [
     accent: "#4285f4",
     tags: ["Cloud Run", "GCS Buckets", "OAuth 2.0"],
     docsUrl: "https://cloud.google.com",
+    connectUrl: "https://console.cloud.google.com/apis/credentials",
   },
   {
     id: "aws",
@@ -231,6 +245,7 @@ const INTEGRATIONS: Integration[] = [
     accent: "#ff9900",
     tags: ["AWS Lambda", "S3 Storage", "IAM Scoped"],
     docsUrl: "https://aws.amazon.com",
+    connectUrl: "https://console.aws.amazon.com/iam/home#/security_credentials",
   },
   {
     id: "webgpu",
@@ -244,6 +259,7 @@ const INTEGRATIONS: Integration[] = [
     tags: ["Offline", "Privacy First", "VRAM Optimized"],
     popular: true,
     docsUrl: "#webgpu",
+    connectUrl: "https://webgpureport.org",
   },
   {
     id: "webhooks",
@@ -256,6 +272,7 @@ const INTEGRATIONS: Integration[] = [
     badge: "OpenAPI",
     tags: ["SSE Streaming", "JSON Schema", "HMAC Signatures"],
     docsUrl: "#api",
+    connectUrl: "/app",
   },
 ];
 
@@ -270,10 +287,18 @@ const CATEGORIES: { id: Category; label: string }[] = [
 function IntegrationsPage() {
   const [selectedCategory, setSelectedCategory] = useState<Category>("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [connectedMap, setConnectedMap] = useState<Record<string, boolean>>({
-    github: true,
-    supabase: true,
-    webgpu: true,
+  const [connectedMap, setConnectedMap] = useState<Record<string, boolean>>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("neura_connected_integrations");
+        if (saved) return JSON.parse(saved);
+      } catch (e) {}
+    }
+    return {
+      github: true,
+      supabase: true,
+      webgpu: true,
+    };
   });
   const [selectedIntegration, setSelectedIntegration] = useState<Integration | null>(null);
   const [copiedSnippet, setCopiedSnippet] = useState(false);
@@ -293,12 +318,33 @@ function IntegrationsPage() {
     });
   }, [selectedCategory, searchQuery]);
 
-  const toggleConnection = (id: string, e?: React.MouseEvent) => {
+  const connectIntegration = (item: Integration, e?: React.MouseEvent) => {
     e?.stopPropagation();
-    setConnectedMap((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
+    if (item.connectUrl) {
+      if (item.connectUrl.startsWith("http")) {
+        window.open(item.connectUrl, "_blank", "noopener,noreferrer");
+      } else if (item.connectUrl.startsWith("/")) {
+        window.location.href = item.connectUrl;
+      }
+    }
+    setConnectedMap((prev) => {
+      const next = { ...prev, [item.id]: true };
+      try {
+        localStorage.setItem("neura_connected_integrations", JSON.stringify(next));
+      } catch (err) {}
+      return next;
+    });
+  };
+
+  const disconnectIntegration = (id: string, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setConnectedMap((prev) => {
+      const next = { ...prev, [id]: false };
+      try {
+        localStorage.setItem("neura_connected_integrations", JSON.stringify(next));
+      } catch (err) {}
+      return next;
+    });
   };
 
   const copyCode = (text: string) => {
@@ -596,27 +642,43 @@ print(response.output)`,
 
                   {/* Bottom Action Button */}
                   <div className="mt-6 border-t border-white/[0.06] pt-4">
-                    <button
-                      type="button"
-                      onClick={(e) => toggleConnection(item.id, e)}
-                      className={`flex w-full items-center justify-center gap-2 rounded-xl py-2 text-xs font-semibold transition-all duration-200 ${
-                        isConnected
-                          ? "border border-white/10 bg-white/[0.04] text-white/70 hover:border-rose-400/40 hover:bg-rose-500/10 hover:text-rose-300"
-                          : "border border-cyan-400/30 bg-cyan-950/20 text-cyan-300 hover:border-cyan-400 hover:bg-cyan-500/15 hover:text-white hover:shadow-[0_0_15px_rgba(110,231,255,0.2)]"
-                      }`}
-                    >
-                      {isConnected ? (
-                        <>
+                    {isConnected ? (
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (item.connectUrl.startsWith("http")) {
+                              window.open(item.connectUrl, "_blank", "noopener,noreferrer");
+                            }
+                          }}
+                          title={`Open ${item.name} portal`}
+                          className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-950/20 py-2 px-3 text-xs font-semibold text-emerald-300 hover:border-emerald-400 hover:bg-emerald-500/10 transition-all"
+                        >
                           <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
                           <span>Connected</span>
-                        </>
-                      ) : (
-                        <>
-                          <Zap className="h-3.5 w-3.5" />
-                          <span>Connect Tool</span>
-                        </>
-                      )}
-                    </button>
+                          <ExternalLink className="h-3 w-3 ml-1 opacity-60 hover:opacity-100" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(e) => disconnectIntegration(item.id, e)}
+                          title="Disconnect"
+                          className="rounded-xl border border-white/10 bg-white/[0.04] p-2 text-white/50 hover:border-rose-500/40 hover:bg-rose-500/10 hover:text-rose-300 transition-colors"
+                        >
+                          <X className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={(e) => connectIntegration(item, e)}
+                        className="flex w-full items-center justify-center gap-2 rounded-xl border border-cyan-400/30 bg-cyan-950/25 py-2 px-3 text-xs font-semibold text-cyan-300 hover:border-cyan-400 hover:bg-cyan-500/20 hover:text-white hover:shadow-[0_0_15px_rgba(110,231,255,0.25)] transition-all"
+                      >
+                        <Zap className="h-3.5 w-3.5" />
+                        <span>Connect Tool</span>
+                        <ExternalLink className="h-3.5 w-3.5 ml-auto opacity-70 group-hover:opacity-100 transition-opacity" />
+                      </button>
+                    )}
                   </div>
                 </motion.div>
               );
@@ -836,28 +898,53 @@ print(response.output)`,
                 </div>
               </div>
 
+              {/* Official Connection Portal Box */}
+              <div className="mt-5 rounded-2xl border border-cyan-500/20 bg-cyan-950/20 p-4 text-xs">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <ExternalLink className="h-4 w-4 text-cyan-400 shrink-0" />
+                    <span className="font-medium text-white/80">Original Connection Portal:</span>
+                  </div>
+                  <a
+                    href={selectedIntegration.connectUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="truncate max-w-full sm:max-w-[260px] font-mono text-[11px] text-cyan-300 hover:text-cyan-100 hover:underline flex items-center gap-1"
+                  >
+                    <span>{selectedIntegration.connectUrl}</span>
+                    <ExternalLink className="h-3 w-3 shrink-0" />
+                  </a>
+                </div>
+              </div>
+
               {/* Modal Actions */}
-              <div className="mt-7 flex gap-3">
+              <div className="mt-7 flex flex-col sm:flex-row gap-3">
                 <button
                   type="button"
-                  onClick={() => {
-                    toggleConnection(selectedIntegration.id);
-                  }}
-                  className={`flex-1 rounded-xl py-2.5 text-xs font-semibold transition-all ${
-                    connectedMap[selectedIntegration.id]
-                      ? "border border-rose-500/30 bg-rose-500/10 text-rose-300 hover:bg-rose-500/20"
-                      : "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-[0_0_20px_rgba(110,231,255,0.3)] hover:opacity-90"
-                  }`}
+                  onClick={() => connectIntegration(selectedIntegration)}
+                  className="flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5 px-4 text-xs font-semibold bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-[0_0_20px_rgba(110,231,255,0.3)] hover:opacity-95 transition-all"
                 >
-                  {connectedMap[selectedIntegration.id]
-                    ? "Disconnect Integration"
-                    : "Connect This Tool (1-Click)"}
+                  <ExternalLink className="h-4 w-4" />
+                  <span>
+                    {connectedMap[selectedIntegration.id]
+                      ? "Open Connection Portal"
+                      : "Open Connection & Authorize"}
+                  </span>
                 </button>
+                {connectedMap[selectedIntegration.id] && (
+                  <button
+                    type="button"
+                    onClick={() => disconnectIntegration(selectedIntegration.id)}
+                    className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-2.5 text-xs font-semibold text-rose-300 hover:bg-rose-500/20 transition-all"
+                  >
+                    Disconnect
+                  </button>
+                )}
                 <Link
                   to="/app"
-                  className="rounded-xl border border-white/10 px-4 py-2.5 text-xs font-medium text-white/80 hover:bg-white/[0.04]"
+                  className="rounded-xl border border-white/10 px-4 py-2.5 text-xs font-medium text-center text-white/80 hover:bg-white/[0.04]"
                 >
-                  Open in Workspace
+                  Workspace
                 </Link>
               </div>
             </motion.div>
