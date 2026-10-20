@@ -21,6 +21,15 @@ import {
   Workflow,
   X,
   Cpu,
+  Plus,
+  Globe,
+  Settings,
+  Trash2,
+  Radio,
+  FileText,
+  Calendar,
+  Mail,
+  Share2,
 } from "lucide-react";
 import {
   SiGithub,
@@ -33,8 +42,22 @@ import {
   SiPostgresql,
   SiRedis,
   SiGooglecloud,
+  SiGoogledrive,
+  SiGmail,
+  SiGooglecalendar,
+  SiZapier,
+  SiHubspot,
+  SiJira,
+  SiConfluence,
+  SiStripe,
+  SiSpotify,
+  SiGitlab,
+  SiSentry,
+  SiPostman,
+  SiWolfram,
+  SiPerplexity,
 } from "react-icons/si";
-import { FaSlack, FaAws } from "react-icons/fa6";
+import { FaSlack, FaAws, FaSalesforce } from "react-icons/fa6";
 import { VscVscode } from "react-icons/vsc";
 
 export const Route = createFileRoute("/integrations")({
@@ -51,12 +74,12 @@ export const Route = createFileRoute("/integrations")({
   component: IntegrationsPage,
 });
 
-type Category = "all" | "developer" | "cloud" | "productivity" | "ai";
+type Category = "all" | "productivity" | "developer" | "cloud" | "ai" | "custom";
 
 type Integration = {
   id: string;
   name: string;
-  category: "developer" | "cloud" | "productivity" | "ai";
+  category: "developer" | "cloud" | "productivity" | "ai" | "custom";
   description: string;
   icon: any;
   accent: string;
@@ -66,6 +89,8 @@ type Integration = {
   connected?: boolean;
   docsUrl: string;
   connectUrl: string;
+  isCustom?: boolean;
+  authType?: string;
 };
 
 const INTEGRATIONS: Integration[] = [
@@ -274,14 +299,224 @@ const INTEGRATIONS: Integration[] = [
     docsUrl: "#api",
     connectUrl: "/app",
   },
+  {
+    id: "googledrive",
+    name: "Google Drive & Docs",
+    category: "productivity",
+    description:
+      "Real-time semantic document search, PDF indexing, spreadsheet analysis, and instant collaborative drafting.",
+    icon: SiGoogledrive,
+    accent: "#4285f4",
+    badge: "Workspace",
+    tags: ["Document Index", "Spreadsheets", "PDF Analysis"],
+    popular: true,
+    docsUrl: "https://support.google.com/drive",
+    connectUrl: "https://drive.google.com",
+  },
+  {
+    id: "gmail",
+    name: "Gmail & Smart Mail",
+    category: "productivity",
+    description:
+      "Context-aware email triage, high-priority thread drafting, meeting extraction, and intelligent unsubscribe.",
+    icon: SiGmail,
+    accent: "#ea4335",
+    badge: "Official",
+    tags: ["Inbox Triage", "Draft Replies", "Thread Summary"],
+    popular: true,
+    docsUrl: "https://support.google.com/mail",
+    connectUrl: "https://mail.google.com",
+  },
+  {
+    id: "googlecalendar",
+    name: "Google Calendar",
+    category: "productivity",
+    description:
+      "Natural language schedule planning, cross-timezone meeting coordination, and automated agenda briefing.",
+    icon: SiGooglecalendar,
+    accent: "#34a853",
+    badge: "Schedule",
+    tags: ["Calendar Sync", "Agenda Briefs", "Time Blocking"],
+    popular: true,
+    docsUrl: "https://support.google.com/calendar",
+    connectUrl: "https://calendar.google.com",
+  },
+  {
+    id: "websearch",
+    name: "Live Web Search & Browsing",
+    category: "ai",
+    description:
+      "Real-time internet crawling, live news scraping, citation extraction, and autonomous web agent navigation.",
+    icon: Globe,
+    accent: "#38bdf8",
+    badge: "Live Index",
+    tags: ["Web Crawler", "Citations", "Real-Time Fact Check"],
+    popular: true,
+    docsUrl: "https://www.google.com",
+    connectUrl: "https://www.google.com",
+  },
+  {
+    id: "perplexity",
+    name: "Perplexity Deep Search",
+    category: "ai",
+    description:
+      "Deep multi-source research synthesis, academic paper indexing, and grounded citation verification.",
+    icon: SiPerplexity,
+    accent: "#22b8cf",
+    badge: "Citations",
+    tags: ["Deep Research", "Academic Sources", "Web Fact-Checking"],
+    popular: true,
+    docsUrl: "https://www.perplexity.ai",
+    connectUrl: "https://www.perplexity.ai",
+  },
+  {
+    id: "wolfram",
+    name: "Wolfram Computational Core",
+    category: "ai",
+    description:
+      "Symbolic mathematics, step-by-step calculus, differential equations, physics simulations, and scientific plotting.",
+    icon: SiWolfram,
+    accent: "#dd1100",
+    badge: "Math & Physics",
+    tags: ["Calculus", "Linear Algebra", "Scientific Computing"],
+    popular: true,
+    docsUrl: "https://www.wolframalpha.com",
+    connectUrl: "https://www.wolframalpha.com",
+  },
+  {
+    id: "zapier",
+    name: "Zapier Automation",
+    category: "ai",
+    description:
+      "Trigger over 6,000+ business applications, automated CRM actions, and multi-step webhook pipelines.",
+    icon: SiZapier,
+    accent: "#ff4a00",
+    badge: "6,000+ Apps",
+    tags: ["Multi-Step Zaps", "No-Code", "Webhooks"],
+    popular: true,
+    docsUrl: "https://zapier.com",
+    connectUrl: "https://zapier.com/app/connections",
+  },
+  {
+    id: "stripe",
+    name: "Stripe Billing & Payments",
+    category: "cloud",
+    description:
+      "Customer subscription telemetry, MRR metric synthesis, payment link creation, and automated invoice triage.",
+    icon: SiStripe,
+    accent: "#635bff",
+    badge: "FinTech",
+    tags: ["Subscriptions", "Invoice Gen", "Revenue Analytics"],
+    popular: true,
+    docsUrl: "https://stripe.com/docs",
+    connectUrl: "https://dashboard.stripe.com/apikeys",
+  },
+  {
+    id: "jira",
+    name: "Jira Software",
+    category: "productivity",
+    description:
+      "Automated ticket triage, agile backlog refinement, predictive burndown analysis, and issue filing from conversations.",
+    icon: SiJira,
+    accent: "#0052cc",
+    tags: ["Sprint Planning", "Bug Triage", "Kanban Sync"],
+    docsUrl: "https://www.atlassian.com/software/jira",
+    connectUrl: "https://id.atlassian.com",
+  },
+  {
+    id: "confluence",
+    name: "Confluence Docs",
+    category: "productivity",
+    description:
+      "Bi-directional enterprise knowledge base sync, PRD architecture generation, and engineering runbook publishing.",
+    icon: SiConfluence,
+    accent: "#172b4d",
+    tags: ["Wiki Sync", "PRD Generation", "Runbooks"],
+    docsUrl: "https://www.atlassian.com/software/confluence",
+    connectUrl: "https://id.atlassian.com",
+  },
+  {
+    id: "hubspot",
+    name: "HubSpot CRM",
+    category: "productivity",
+    description:
+      "Inbound lead scoring, customer interaction logging, sales sequence drafts, and lifecycle stage tracking.",
+    icon: SiHubspot,
+    accent: "#ff7a59",
+    tags: ["CRM Sync", "Lead Intelligence", "Deals"],
+    docsUrl: "https://developers.hubspot.com",
+    connectUrl: "https://app.hubspot.com",
+  },
+  {
+    id: "salesforce",
+    name: "Salesforce Cloud",
+    category: "cloud",
+    description:
+      "Natural language SOQL queries, enterprise opportunity updates, account contact intelligence, and workflow triggers.",
+    icon: FaSalesforce,
+    accent: "#00a1e0",
+    badge: "Enterprise",
+    tags: ["SOQL Queries", "Opportunity Sync", "Custom Objects"],
+    docsUrl: "https://developer.salesforce.com",
+    connectUrl: "https://login.salesforce.com",
+  },
+  {
+    id: "gitlab",
+    name: "GitLab",
+    category: "developer",
+    description:
+      "CI/CD YAML pipeline debugging, merge request code diff reviews, and container registry inspection.",
+    icon: SiGitlab,
+    accent: "#fc6d26",
+    tags: ["GitLab CI", "Merge Requests", "DevOps"],
+    docsUrl: "https://docs.gitlab.com",
+    connectUrl: "https://gitlab.com",
+  },
+  {
+    id: "sentry",
+    name: "Sentry Telemetry",
+    category: "developer",
+    description:
+      "Production exception clustering, automated root-cause stack trace analysis, and suggested bug fixes.",
+    icon: SiSentry,
+    accent: "#fb4226",
+    tags: ["Exception Triage", "Performance Tracing", "Crash Dumps"],
+    docsUrl: "https://docs.sentry.io",
+    connectUrl: "https://sentry.io",
+  },
+  {
+    id: "postman",
+    name: "Postman Collections",
+    category: "developer",
+    description:
+      "Direct collection import, mock server routing, automated contract testing, and schema validation.",
+    icon: SiPostman,
+    accent: "#ff6c37",
+    tags: ["OpenAPI Import", "Mock API", "Contract Testing"],
+    docsUrl: "https://learning.postman.com",
+    connectUrl: "https://web.postman.co",
+  },
+  {
+    id: "spotify",
+    name: "Spotify Focus Audio",
+    category: "productivity",
+    description:
+      "Adaptive deep-work audio player, binaural beat generation, and distraction-free playback orchestration.",
+    icon: SiSpotify,
+    accent: "#1db954",
+    tags: ["Deep Work", "Audio Control", "Soundscapes"],
+    docsUrl: "https://developer.spotify.com",
+    connectUrl: "https://developer.spotify.com/dashboard",
+  },
 ];
 
 const CATEGORIES: { id: Category; label: string }[] = [
   { id: "all", label: "All Integrations" },
-  { id: "developer", label: "Developer & IDEs" },
+  { id: "productivity", label: "Workspace & Office" },
+  { id: "developer", label: "Developer & Code" },
   { id: "cloud", label: "Cloud & Databases" },
-  { id: "productivity", label: "Productivity & Team" },
-  { id: "ai", label: "AI & APIs" },
+  { id: "ai", label: "Web Search & Automation" },
+  { id: "custom", label: "Custom Connections" },
 ];
 
 function IntegrationsPage() {
@@ -298,16 +533,40 @@ function IntegrationsPage() {
       github: true,
       supabase: true,
       webgpu: true,
+      websearch: true,
+      googledrive: true,
     };
+  });
+  const [customIntegrations, setCustomIntegrations] = useState<Integration[]>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("neura_custom_integrations");
+        if (saved) return JSON.parse(saved);
+      } catch (e) {}
+    }
+    return [];
+  });
+  const [isAddingCustom, setIsAddingCustom] = useState(false);
+  const [customForm, setCustomForm] = useState({
+    name: "",
+    type: "REST API Webhook",
+    connectUrl: "",
+    description: "",
+    authType: "Bearer Token / API Key",
   });
   const [selectedIntegration, setSelectedIntegration] = useState<Integration | null>(null);
   const [copiedSnippet, setCopiedSnippet] = useState(false);
   const [activeSnippetTab, setActiveSnippetTab] = useState<"ts" | "python" | "curl">("ts");
 
+  const allIntegrations = useMemo(() => {
+    return [...customIntegrations, ...INTEGRATIONS];
+  }, [customIntegrations]);
+
   const filtered = useMemo(() => {
-    return INTEGRATIONS.filter((item) => {
+    return allIntegrations.filter((item) => {
       const matchesCategory =
-        selectedCategory === "all" || item.category === selectedCategory;
+        selectedCategory === "all" ||
+        (selectedCategory === "custom" ? !!item.isCustom : item.category === selectedCategory);
       const q = searchQuery.toLowerCase().trim();
       const matchesQuery =
         !q ||
@@ -316,7 +575,88 @@ function IntegrationsPage() {
         item.tags.some((t) => t.toLowerCase().includes(q));
       return matchesCategory && matchesQuery;
     });
-  }, [selectedCategory, searchQuery]);
+  }, [allIntegrations, selectedCategory, searchQuery]);
+
+  const handleCreateCustom = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!customForm.name.trim() || !customForm.connectUrl.trim()) return;
+
+    let targetUrl = customForm.connectUrl.trim();
+    if (
+      !targetUrl.startsWith("http://") &&
+      !targetUrl.startsWith("https://") &&
+      !targetUrl.startsWith("/")
+    ) {
+      targetUrl = "https://" + targetUrl;
+    }
+
+    const newIntegration: Integration = {
+      id: `custom-${Date.now()}`,
+      name: customForm.name.trim(),
+      category: "custom",
+      description:
+        customForm.description.trim() ||
+        `Custom integration with ${customForm.name.trim()} via ${customForm.type}.`,
+      icon: customForm.type.includes("MCP") ? Workflow : Database,
+      accent: "#a855f7",
+      badge: "Custom",
+      tags: [customForm.type, customForm.authType],
+      popular: true,
+      docsUrl: targetUrl,
+      connectUrl: targetUrl,
+      isCustom: true,
+      authType: customForm.authType,
+    };
+
+    const updated = [newIntegration, ...customIntegrations];
+    setCustomIntegrations(updated);
+    try {
+      localStorage.setItem("neura_custom_integrations", JSON.stringify(updated));
+    } catch (err) {}
+
+    // Open connection link immediately
+    if (targetUrl.startsWith("http")) {
+      window.open(targetUrl, "_blank", "noopener,noreferrer");
+    }
+
+    // Mark as connected
+    setConnectedMap((prev) => {
+      const next = { ...prev, [newIntegration.id]: true };
+      try {
+        localStorage.setItem("neura_connected_integrations", JSON.stringify(next));
+      } catch (err) {}
+      return next;
+    });
+
+    setIsAddingCustom(false);
+    setCustomForm({
+      name: "",
+      type: "REST API Webhook",
+      connectUrl: "",
+      description: "",
+      authType: "Bearer Token / API Key",
+    });
+  };
+
+  const handleDeleteCustom = (id: string, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    const updated = customIntegrations.filter((c) => c.id !== id);
+    setCustomIntegrations(updated);
+    try {
+      localStorage.setItem("neura_custom_integrations", JSON.stringify(updated));
+    } catch (err) {}
+    setConnectedMap((prev) => {
+      const copy = { ...prev };
+      delete copy[id];
+      try {
+        localStorage.setItem("neura_connected_integrations", JSON.stringify(copy));
+      } catch (err) {}
+      return copy;
+    });
+    if (selectedIntegration?.id === id) {
+      setSelectedIntegration(null);
+    }
+  };
 
   const connectIntegration = (item: Integration, e?: React.MouseEvent) => {
     e?.stopPropagation();
@@ -532,14 +872,22 @@ print(response.output)`,
               )}
             </div>
 
-            {/* Quick Stats Counter */}
-            <div className="flex items-center gap-3 text-xs text-white/60">
+            {/* Quick Stats Counter & Custom Connection Button */}
+            <div className="flex flex-wrap items-center gap-3 text-xs text-white/60">
               <span className="flex items-center gap-1.5 font-mono">
                 <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
                 {Object.values(connectedMap).filter(Boolean).length} Active Connections
               </span>
               <span>•</span>
               <span>{filtered.length} Available Tools</span>
+              <button
+                type="button"
+                onClick={() => setIsAddingCustom(true)}
+                className="ml-auto flex items-center gap-1.5 rounded-xl border border-cyan-400/40 bg-cyan-950/40 px-3 py-1.5 text-xs font-semibold text-cyan-300 shadow-[0_0_15px_rgba(110,231,255,0.15)] transition-all hover:border-cyan-400 hover:bg-cyan-500/20 hover:text-white hover:shadow-[0_0_20px_rgba(110,231,255,0.3)]"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                <span>Add Custom Connection</span>
+              </button>
             </div>
           </div>
 
@@ -574,6 +922,56 @@ print(response.output)`,
         {/* Integration Cards Grid */}
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           <AnimatePresence mode="popLayout">
+            {/* Custom Connection Card Promo / Trigger */}
+            {(selectedCategory === "all" || selectedCategory === "custom") && !searchQuery && (
+              <motion.div
+                layout
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                onClick={() => setIsAddingCustom(true)}
+                className="group relative flex cursor-pointer flex-col justify-between rounded-2xl border border-dashed border-cyan-400/40 bg-gradient-to-b from-cyan-950/20 to-[#070b18]/60 p-5 backdrop-blur-xl transition-all duration-300 hover:border-cyan-400 hover:bg-cyan-950/35 hover:shadow-[0_0_30px_rgba(110,231,255,0.2)]"
+              >
+                <div>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-cyan-400/40 bg-cyan-500/10 text-cyan-300 transition-transform duration-300 group-hover:scale-110">
+                      <Plus className="h-6 w-6" />
+                    </div>
+                    <span className="rounded-md border border-cyan-400/30 bg-cyan-950/40 px-2 py-0.5 text-[10px] font-mono text-cyan-300">
+                      CUSTOM BUILDER
+                    </span>
+                  </div>
+
+                  <div className="mt-4">
+                    <h3 className="font-display text-base font-semibold text-white group-hover:text-cyan-300 transition-colors">
+                      + Add Custom Connection
+                    </h3>
+                    <p className="mt-2 text-xs leading-relaxed text-white/60">
+                      Connect your own REST API, MCP tool server, GraphQL endpoint, or proprietary webhook service.
+                    </p>
+                  </div>
+
+                  <div className="mt-4 flex flex-wrap gap-1.5">
+                    {["Custom API", "MCP Server", "Webhook", "Bearer Auth"].map((t) => (
+                      <span
+                        key={t}
+                        className="rounded-md bg-cyan-400/10 px-2 py-0.5 text-[10px] font-mono text-cyan-300/80"
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-6 border-t border-white/[0.06] pt-4">
+                  <div className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-cyan-400/40 bg-cyan-950/40 py-2 px-3 text-xs font-semibold text-cyan-300 group-hover:border-cyan-400 group-hover:bg-cyan-500/20 group-hover:text-white transition-all">
+                    <Plus className="h-3.5 w-3.5" />
+                    <span>Configure Connection</span>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
             {filtered.map((item, index) => {
               const Icon = item.icon;
               const isConnected = !!connectedMap[item.id];
@@ -607,6 +1005,16 @@ print(response.output)`,
                           <span className="rounded-md border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[10px] font-mono text-white/70">
                             {item.badge}
                           </span>
+                        )}
+                        {item.isCustom && (
+                          <button
+                            type="button"
+                            onClick={(e) => handleDeleteCustom(item.id, e)}
+                            title="Delete custom connection"
+                            className="rounded-md border border-rose-500/30 bg-rose-500/10 p-1 text-rose-400 hover:bg-rose-500/20 hover:text-rose-200 transition-colors"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </button>
                         )}
                         {isConnected && (
                           <span className="flex items-center gap-1 rounded-md border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-300">
@@ -940,6 +1348,16 @@ print(response.output)`,
                     Disconnect
                   </button>
                 )}
+                {selectedIntegration.isCustom && (
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteCustom(selectedIntegration.id)}
+                    className="flex items-center justify-center gap-1.5 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-2.5 text-xs font-semibold text-rose-300 hover:bg-rose-500/20 transition-all"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                    <span>Delete</span>
+                  </button>
+                )}
                 <Link
                   to="/app"
                   className="rounded-xl border border-white/10 px-4 py-2.5 text-xs font-medium text-center text-white/80 hover:bg-white/[0.04]"
@@ -947,6 +1365,147 @@ print(response.output)`,
                   Workspace
                 </Link>
               </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Create Custom Connection Modal */}
+      <AnimatePresence>
+        {isAddingCustom && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsAddingCustom(false)}
+              className="absolute inset-0 bg-black/80 backdrop-blur-md"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ type: "spring", duration: 0.35, bounce: 0.15 }}
+              className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-3xl border border-cyan-400/30 bg-[#070b18] p-6 shadow-[0_0_50px_rgba(110,231,255,0.2)] md:p-8"
+            >
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-cyan-400/40 bg-cyan-500/10 text-cyan-300">
+                    <Plus className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="font-display text-xl font-bold text-white">
+                      Add Custom Connection
+                    </h3>
+                    <p className="text-xs text-white/60">
+                      Register a custom API endpoint, MCP tool server, or internal service
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setIsAddingCustom(false)}
+                  className="rounded-lg p-1.5 text-white/50 hover:bg-white/10 hover:text-white"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              <form onSubmit={handleCreateCustom} className="mt-6 space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold text-white/80 mb-1.5">
+                    Connection Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={customForm.name}
+                    onChange={(e) => setCustomForm({ ...customForm, name: e.target.value })}
+                    placeholder="e.g., Internal Database API, Custom MCP Server"
+                    className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5 text-xs text-white placeholder:text-white/30 focus:border-cyan-400/60 focus:outline-none focus:ring-1 focus:ring-cyan-400/40"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-white/80 mb-1.5">
+                    Integration Type
+                  </label>
+                  <select
+                    value={customForm.type}
+                    onChange={(e) => setCustomForm({ ...customForm, type: e.target.value })}
+                    className="w-full rounded-xl border border-white/10 bg-[#0d1428] px-3.5 py-2.5 text-xs text-white focus:border-cyan-400/60 focus:outline-none focus:ring-1 focus:ring-cyan-400/40"
+                  >
+                    <option value="REST API Webhook">REST API Webhook</option>
+                    <option value="MCP Tool Server">Model Context Protocol (MCP) Server</option>
+                    <option value="GraphQL Gateway">GraphQL Gateway</option>
+                    <option value="OAuth 2.0 Web Portal">OAuth 2.0 Web Portal</option>
+                    <option value="Database Proxy">Direct Database Proxy</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-white/80 mb-1.5">
+                    Official Connection / Endpoint URL *
+                  </label>
+                  <input
+                    type="url"
+                    required
+                    value={customForm.connectUrl}
+                    onChange={(e) => setCustomForm({ ...customForm, connectUrl: e.target.value })}
+                    placeholder="https://api.mycompany.com/webhook or https://service.internal"
+                    className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5 text-xs font-mono text-white placeholder:text-white/30 focus:border-cyan-400/60 focus:outline-none focus:ring-1 focus:ring-cyan-400/40"
+                  />
+                  <p className="mt-1 text-[11px] text-white/40">
+                    This link will open automatically when you or Neura connect to this service.
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-white/80 mb-1.5">
+                    Authentication Method
+                  </label>
+                  <select
+                    value={customForm.authType}
+                    onChange={(e) => setCustomForm({ ...customForm, authType: e.target.value })}
+                    className="w-full rounded-xl border border-white/10 bg-[#0d1428] px-3.5 py-2.5 text-xs text-white focus:border-cyan-400/60 focus:outline-none focus:ring-1 focus:ring-cyan-400/40"
+                  >
+                    <option value="Bearer Token / API Key">Bearer Token / Header API Key</option>
+                    <option value="OAuth 2.0 PKCE">OAuth 2.0 / PKCE Flow</option>
+                    <option value="HMAC Secret Signature">HMAC Secret Webhook Signature</option>
+                    <option value="Mutual TLS / Certificate">Mutual TLS Client Certificate</option>
+                    <option value="None / Public Webhook">None / Open Endpoint</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-white/80 mb-1.5">
+                    Description
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={customForm.description}
+                    onChange={(e) => setCustomForm({ ...customForm, description: e.target.value })}
+                    placeholder="Describe how Neura should route context and trigger operations with this endpoint..."
+                    className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5 text-xs text-white placeholder:text-white/30 focus:border-cyan-400/60 focus:outline-none focus:ring-1 focus:ring-cyan-400/40 resize-none"
+                  />
+                </div>
+
+                <div className="pt-3 flex items-center justify-end gap-3 border-t border-white/[0.08]">
+                  <button
+                    type="button"
+                    onClick={() => setIsAddingCustom(false)}
+                    className="rounded-xl border border-white/10 px-4 py-2.5 text-xs font-medium text-white/70 hover:bg-white/[0.04] hover:text-white"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 px-5 py-2.5 text-xs font-semibold text-white shadow-[0_0_20px_rgba(110,231,255,0.3)] hover:opacity-95 transition-all"
+                  >
+                    <Plus className="h-3.5 w-3.5" />
+                    <span>Create & Connect</span>
+                  </button>
+                </div>
+              </form>
             </motion.div>
           </div>
         )}
