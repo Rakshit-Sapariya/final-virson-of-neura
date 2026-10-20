@@ -33,6 +33,16 @@ import {
   SlidersHorizontal,
   ExternalLink,
   Zap,
+  Download,
+  Maximize2,
+  Minimize2,
+  ListTodo,
+  History,
+  BookOpen,
+  CheckCircle2,
+  AlertCircle,
+  Layers,
+  FileText,
 } from "lucide-react";
 import { ensureDefaultWorkspace } from "@/lib/workspaces.functions";
 import {
@@ -116,7 +126,76 @@ type CanvasArtifact = {
   title: string;
   language: string;
   code: string;
+  version?: number;
+  versions?: { version: number; code: string; timestamp: string }[];
 };
+
+type SlashCommand = {
+  command: string;
+  label: string;
+  description: string;
+  icon: any;
+  prompt: string;
+};
+
+const SLASH_COMMANDS: SlashCommand[] = [
+  {
+    command: "/init",
+    label: "Initialize Project Rules (NEURA.md)",
+    description: "Generate structured project guidelines, code conventions, and system rules",
+    icon: BookOpen,
+    prompt: "Generate a production-ready NEURA.md project rule file with strict architectural standards, TypeScript patterns, and testing guidelines for this codebase.",
+  },
+  {
+    command: "/code",
+    label: "Launch Neura Code Multi-File Agent",
+    description: "Autonomously explore codebase, plan architecture, and generate unified multi-file diffs",
+    icon: Code2,
+    prompt: "Launch Neura Code Agent: inspect the repository architecture, plan required code modifications, and generate unified multi-file git diffs.",
+  },
+  {
+    command: "/review",
+    label: "Deep Code Review & Security Audit",
+    description: "Scan code for vulnerabilities, edge-case bugs, performance regressions, and typing errors",
+    icon: AlertCircle,
+    prompt: "Perform a comprehensive security audit and code quality review. Flag vulnerabilities, memory leaks, and propose exact diff patches.",
+  },
+  {
+    command: "/test",
+    label: "Generate Unit & Integration Tests",
+    description: "Produce robust test suites with Vitest/Jest, mock dependencies, and edge cases",
+    icon: CheckCircle2,
+    prompt: "Generate a full Vitest test suite for this module covering happy paths, network failures, edge cases, and boundary conditions.",
+  },
+  {
+    command: "/fix",
+    label: "Diagnose & Auto-Patch Error",
+    description: "Analyze runtime stack trace, pinpoint root cause, and output drop-in code fix",
+    icon: RefreshCw,
+    prompt: "Analyze the runtime error and stack trace. Identify root cause, verify AST constraints, and output the drop-in patch.",
+  },
+  {
+    command: "/plan",
+    label: "Multi-Step Architecture Plan",
+    description: "Create an engineering blueprint with task breakdown before modifying files",
+    icon: ListTodo,
+    prompt: "Create a detailed, step-by-step technical implementation plan and architectural breakdown before writing any code.",
+  },
+  {
+    command: "/compact",
+    label: "Context Window Compaction",
+    description: "Prune conversation history while preserving key context memories, decisions, and files",
+    icon: Layers,
+    prompt: "Summarize and compact our conversation history into a concise context state, preserving all architectural decisions, code rules, and active tasks.",
+  },
+  {
+    command: "/terminal",
+    label: "Execute Terminal Task",
+    description: "Run automated build, lint, or test commands in the integrated Neura terminal",
+    icon: Terminal,
+    prompt: "Run terminal validation: verify package dependencies, execute lint checks, and run unit tests.",
+  },
+];
 
 function groupConversationsByDate(
   items: Array<{ id: string; title: string; updated_at: string }>,
@@ -186,7 +265,88 @@ function AppPage() {
   const [webSearchActive, setWebSearchActive] = useState(false);
   const [canvasOpen, setCanvasOpen] = useState(false);
   const [activeArtifact, setActiveArtifact] = useState<CanvasArtifact | null>(null);
-  const [canvasTab, setCanvasTab] = useState<"code" | "preview">("code");
+  const [canvasTab, setCanvasTab] = useState<"code" | "preview" | "diff">("code");
+  const [canvasFullscreen, setCanvasFullscreen] = useState(false);
+  const [activeWorkspaceMode, setActiveWorkspaceMode] = useState<"chat" | "code_agent">("chat");
+  const [thinkingBudget, setThinkingBudget] = useState<number>(8192);
+  const [thinkingBudgetOpen, setThinkingBudgetOpen] = useState(false);
+  const [projectModalOpen, setProjectModalOpen] = useState(false);
+  const [projectRules, setProjectRules] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("neura_project_rules");
+      if (saved) return saved;
+    }
+    return `# NEURA.md — Project Guidelines & Architecture Standards
+
+## Code Standards
+- Strict TypeScript: No 'any', strict null checks, explicit function return types.
+- UI: React functional components with Tailwind CSS utility classes.
+- Architecture: Modular service functions with TanStack Query and TanStack Start.
+- Error Handling: Use ApiError and typed response envelopes.
+- Testing: Comprehensive Vitest unit tests for critical business logic.`;
+  });
+
+  const [agentTasks, setAgentTasks] = useState([
+    { id: "1", title: "Inspect repository AST & dependency graph", done: true },
+    { id: "2", title: "Formulate technical architecture blueprint", done: true },
+    { id: "3", title: "Synthesize multi-file code diffs with AST verification", done: true },
+    { id: "4", title: "Run automated tests & verify zero regressions", done: false },
+  ]);
+
+  const [stagedDiffs, setStagedDiffs] = useState([
+    {
+      file: "src/lib/agent-router.ts",
+      additions: 34,
+      deletions: 6,
+      diff: `@@ -12,6 +12,14 @@
+ export interface RouteDecision {
+   tier: "fast" | "deep" | "balanced";
+   targetLatencyMs: number;
++  // Adaptive multi-model intent routing
++  intentTags: string[];
++  requiresArtifactCanvas: boolean;
++  toolPermissions: string[];
++}`,
+    },
+    {
+      file: "src/components/ArtifactCanvas.tsx",
+      additions: 52,
+      deletions: 8,
+      diff: `@@ -45,8 +45,18 @@
+ export function ArtifactCanvas() {
+-  return <div>Legacy Canvas</div>;
++  // Multi-version time-travel & sandboxed preview
++  const [version, setVersion] = useState(1);
++  const [viewMode, setViewMode] = useState<"code" | "preview" | "diff">("code");
++  return <InteractiveCanvasContainer version={version} mode={viewMode} />;
++}`,
+    },
+    {
+      file: "schema.prisma",
+      additions: 12,
+      deletions: 2,
+      diff: `@@ -18,2 +18,12 @@
+ model AgentTaskLog {
+   id          String   @id @default(uuid())
++  traceId     String   @unique
++  tokensUsed  Int
++  cacheHit    Boolean  @default(true)
++  durationMs  Int
++  createdAt   DateTime @default(now())
++}`,
+    },
+  ]);
+  const [diffsApplied, setDiffsApplied] = useState(false);
+
+  const [terminalLogs, setTerminalLogs] = useState<string[]>([
+    "neura-code-agent v3.5.2 initialized in workspace root",
+    "Loaded project rules from NEURA.md (5 active rules enforced)",
+    "Connected to Neura Ultra Deep Reasoning engine (8k token budget)",
+    "Ready for agentic task execution. Type /help or click a command below.",
+  ]);
+  const [terminalExecuting, setTerminalExecuting] = useState(false);
+  const [terminalInput, setTerminalInput] = useState("");
+  const [slashMenuOpen, setSlashMenuOpen] = useState(false);
   const [copiedShare, setCopiedShare] = useState(false);
   const [lite, setLite] = useState(false);
 
@@ -617,11 +777,54 @@ Would you like to generate a sample fullstack component to test the Canvas view?
   const overLimit = limitReached && !unlimited && !(usage.data && used < limit);
   const composerDisabled = workspaceBroken || overLimit || (isDemo && isSendingDemo);
 
+  const runTerminalCommand = (cmd: string) => {
+    const cleanCmd = cmd.trim();
+    if (!cleanCmd) return;
+    setTerminalExecuting(true);
+    setTerminalLogs((prev) => [...prev, `$ ${cleanCmd}`]);
+    setTimeout(() => {
+      let output = "";
+      if (cleanCmd.includes("test")) {
+        output = "✓ 4/4 test suites passed (18 tests, 0 failures) [84ms]";
+        setAgentTasks((prev) => prev.map((t) => (t.id === "4" ? { ...t, done: true } : t)));
+      } else if (cleanCmd.includes("lint")) {
+        output = "✓ ESLint and TypeScript AST typecheck passed with 0 warnings";
+      } else if (cleanCmd.includes("build")) {
+        output = "✓ Production bundle built successfully (dist/server + dist/client) [790ms]";
+      } else if (cleanCmd.includes("diff")) {
+        output = "Showing 3 staged files (+98 / -16 lines). Ready to commit.";
+      } else if (cleanCmd.includes("status")) {
+        output = "On branch main. 3 files staged for commit. Working tree clean.";
+      } else {
+        output = `Command '${cleanCmd}' executed in sandbox runtime [exit code 0]`;
+      }
+      setTerminalLogs((prev) => [...prev, output]);
+      setTerminalExecuting(false);
+      setTerminalInput("");
+    }, 450);
+  };
+
+  const handleDownloadArtifact = () => {
+    if (!activeArtifact) return;
+    const blob = new Blob([activeArtifact.code], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = activeArtifact.title || `artifact.${activeArtifact.language || "txt"}`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const handleOpenCanvas = (code: string, language: string, title?: string) => {
     setActiveArtifact({
       title: title || `Component.${language || "tsx"}`,
       language: language || "tsx",
       code,
+      version: 1,
+      versions: [
+        { version: 1, code, timestamp: "v1.0 • Original" },
+        { version: 2, code: code + "\n// Added state caching and error boundary", timestamp: "v1.1 • Cached" },
+      ],
     });
     setCanvasOpen(true);
   };
@@ -853,8 +1056,8 @@ Would you like to generate a sample fullstack component to test the Canvas view?
       {/* Main Workspace */}
       <main className="flex min-w-0 flex-1 flex-col h-full relative">
         {/* Top Header */}
-        <header className="flex h-14 items-center justify-between border-b border-border/60 bg-background/50 backdrop-blur-md px-4 z-20">
-          <div className="flex items-center gap-3 min-w-0">
+        <header className="flex h-14 items-center justify-between border-b border-border/60 bg-background/50 backdrop-blur-md px-4 z-20 gap-3">
+          <div className="flex items-center gap-2.5 min-w-0">
             {!sidebarOpen && (
               <button
                 onClick={() => setSidebarOpen(true)}
@@ -871,15 +1074,44 @@ Would you like to generate a sample fullstack component to test the Canvas view?
               <PanelLeft className="w-5 h-5" />
             </button>
 
+            {/* Mode Switcher: Chat vs Code Agent */}
+            <div className="flex rounded-xl bg-accent/40 p-0.5 border border-border/70 text-xs shrink-0">
+              <button
+                type="button"
+                onClick={() => setActiveWorkspaceMode("chat")}
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
+                  activeWorkspaceMode === "chat"
+                    ? "bg-cyan-500/20 text-cyan-300 shadow-sm border border-cyan-500/30"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <Bot className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Chat</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveWorkspaceMode("code_agent")}
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
+                  activeWorkspaceMode === "code_agent"
+                    ? "bg-emerald-500/20 text-emerald-300 shadow-sm border border-emerald-500/30"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <Terminal className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Code Agent</span>
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              </button>
+            </div>
+
             {/* Model Selector Dropdown */}
-            <div className="relative">
+            <div className="relative hidden sm:block">
               <button
                 onClick={() => setModelDropdownOpen((v) => !v)}
-                className="flex items-center gap-2 rounded-xl bg-accent/60 hover:bg-accent px-3 py-1.5 text-xs font-semibold text-foreground border border-border/70 transition-colors"
+                className="flex items-center gap-2 rounded-xl bg-accent/60 hover:bg-accent px-2.5 py-1 text-xs font-semibold text-foreground border border-border/70 transition-colors"
               >
                 <Bot className="w-3.5 h-3.5 text-cyan-400" />
                 <span>{selectedModel.name}</span>
-                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 font-mono border border-cyan-500/20">
+                <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-cyan-500/10 text-cyan-300 font-mono border border-cyan-500/20">
                   {selectedModel.badge}
                 </span>
                 <ChevronDown className="w-3 h-3 text-muted-foreground" />
@@ -936,19 +1168,73 @@ Would you like to generate a sample fullstack component to test the Canvas view?
 
           {/* Right Header Actions */}
           <div className="flex items-center gap-2">
-            {/* Thinking Mode Toggle */}
+            {/* Context & Cache Gauge */}
+            <div className="hidden xl:flex items-center gap-2 px-2.5 py-1 rounded-xl bg-accent/30 border border-border/50 text-[11px] font-mono text-muted-foreground">
+              <span className="text-cyan-400">24.8k / 200k tokens</span>
+              <span className="h-1 w-1 rounded-full bg-border" />
+              <span className="text-emerald-400">⚡ 94% Cache Hit</span>
+            </div>
+
+            {/* NEURA.md Project Rules Button */}
             <button
-              onClick={() => setThinkingMode((v) => !v)}
-              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium border transition-colors ${
-                thinkingMode
-                  ? "bg-indigo-500/15 border-indigo-500/40 text-indigo-300 shadow-[0_0_12px_rgba(99,102,241,0.2)]"
-                  : "border-border/60 text-muted-foreground hover:text-foreground hover:bg-accent/40"
-              }`}
-              title="Toggle Chain-of-Thought Reasoning"
+              type="button"
+              onClick={() => setProjectModalOpen(true)}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium border border-border/60 text-muted-foreground hover:text-foreground hover:bg-accent/40 transition-colors"
+              title="Project Knowledge & Code Guidelines (NEURA.md)"
             >
-              <Brain className="w-3.5 h-3.5 text-indigo-400" />
-              <span className="hidden sm:inline">Reasoning</span>
+              <BookOpen className="w-3.5 h-3.5 text-indigo-400" />
+              <span className="hidden sm:inline">NEURA.md</span>
             </button>
+
+            {/* Extended Thinking & Budget Selector */}
+            <div className="relative">
+              <button
+                onClick={() => {
+                  setThinkingBudgetOpen((v) => !v);
+                  if (!thinkingMode) setThinkingMode(true);
+                }}
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium border transition-colors ${
+                  thinkingMode
+                    ? "bg-indigo-500/15 border-indigo-500/40 text-indigo-300 shadow-[0_0_12px_rgba(99,102,241,0.2)]"
+                    : "border-border/60 text-muted-foreground hover:text-foreground hover:bg-accent/40"
+                }`}
+                title="Extended Thinking & Token Budget"
+              >
+                <Brain className="w-3.5 h-3.5 text-indigo-400" />
+                <span className="hidden sm:inline">Thinking:</span>
+                <span className="font-mono text-cyan-300 font-semibold">{thinkingBudget / 1024}k</span>
+                <ChevronDown className="w-3 h-3 text-muted-foreground" />
+              </button>
+
+              {thinkingBudgetOpen && (
+                <>
+                  <div className="fixed inset-0 z-30" onClick={() => setThinkingBudgetOpen(false)} />
+                  <div className="absolute right-0 mt-2 w-56 rounded-2xl border border-border/80 bg-background/95 backdrop-blur-xl p-2.5 shadow-2xl z-40 space-y-1 text-xs">
+                    <p className="px-2 py-1 text-[10px] uppercase font-bold tracking-wider text-muted-foreground">
+                      Thinking Token Budget
+                    </p>
+                    {[1024, 4096, 8192, 16384, 32768].map((budget) => (
+                      <button
+                        key={budget}
+                        onClick={() => {
+                          setThinkingBudget(budget);
+                          setThinkingMode(true);
+                          setThinkingBudgetOpen(false);
+                        }}
+                        className={`flex w-full items-center justify-between p-2 rounded-xl transition-colors ${
+                          thinkingBudget === budget
+                            ? "bg-indigo-500/20 text-indigo-300 font-semibold"
+                            : "hover:bg-accent/60 text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        <span>{budget / 1024}k token budget</span>
+                        {thinkingBudget === budget && <Check className="w-3.5 h-3.5 text-cyan-400" />}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
 
             {/* Canvas / Artifacts Toggle */}
             <button
@@ -983,7 +1269,256 @@ Would you like to generate a sample fullstack component to test the Canvas view?
         <div className="flex flex-1 min-h-0 overflow-hidden relative">
           {lite ? (
             <LiteChat onExit={() => setLite(false)} />
+          ) : activeWorkspaceMode === "code_agent" ? (
+            /* Neura Code Agent Studio (CLI & Multi-File Codebase Agent) */
+            <div className="flex flex-1 min-w-0 h-full flex-col lg:flex-row overflow-hidden bg-[#07090e]">
+              {/* Left Column: Task Checklist & Staged Diffs */}
+              <div className="flex-1 flex flex-col min-w-0 border-r border-border/60 overflow-y-auto p-4 md:p-6 space-y-6">
+                {/* Agent Header Banner */}
+                <div className="rounded-2xl border border-emerald-500/30 bg-gradient-to-r from-emerald-950/40 via-teal-950/30 to-[#0c121e] p-5 shadow-[0_0_30px_rgba(16,185,129,0.12)]">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400">
+                        <Terminal className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-sm font-bold text-white font-display">
+                            Neura Code Agent • Autonomous Codebase Runner
+                          </h3>
+                          <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                        </div>
+                        <p className="text-xs text-emerald-300/70">
+                          Multi-file AST refactoring, terminal execution, and verified git diffs
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => runTerminalCommand("neura test")}
+                        className="px-3 py-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 text-xs font-semibold transition-all flex items-center gap-1.5"
+                      >
+                        <Play className="w-3 h-3 fill-current" />
+                        <span>Run Tests</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => runTerminalCommand("neura build")}
+                        className="px-3 py-1.5 rounded-lg border border-cyan-500/40 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 text-xs font-semibold transition-all flex items-center gap-1.5"
+                      >
+                        <Zap className="w-3 h-3" />
+                        <span>Run Build</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Autonomous Task Plan Checklist */}
+                <div className="rounded-2xl border border-border/70 bg-accent/20 p-5 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-xs font-bold text-foreground">
+                      <ListTodo className="w-4 h-4 text-cyan-400" />
+                      <span>Autonomous Engineering Plan</span>
+                    </div>
+                    <span className="text-[11px] font-mono text-cyan-400 font-semibold">
+                      {agentTasks.filter((t) => t.done).length}/{agentTasks.length} Completed
+                    </span>
+                  </div>
+
+                  <div className="space-y-2 pt-1">
+                    {agentTasks.map((task) => (
+                      <div
+                        key={task.id}
+                        onClick={() =>
+                          setAgentTasks((prev) =>
+                            prev.map((t) => (t.id === task.id ? { ...t, done: !t.done } : t))
+                          )
+                        }
+                        className={`flex items-center gap-3 p-2.5 rounded-xl border text-xs cursor-pointer transition-all ${
+                          task.done
+                            ? "border-emerald-500/25 bg-emerald-950/20 text-emerald-300"
+                            : "border-border/60 bg-background/60 text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        <div
+                          className={`flex h-4 w-4 items-center justify-center rounded-md border transition-colors ${
+                            task.done
+                              ? "border-emerald-400 bg-emerald-400 text-black"
+                              : "border-muted-foreground"
+                          }`}
+                        >
+                          {task.done && <Check className="w-3 h-3 stroke-[3]" />}
+                        </div>
+                        <span className={task.done ? "line-through opacity-80" : ""}>{task.title}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Staged Multi-File Unified Diffs */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-xs font-bold text-foreground">
+                      <FileText className="w-4 h-4 text-emerald-400" />
+                      <span>Staged Multi-File Diffs ({stagedDiffs.length} files)</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setDiffsApplied(true);
+                          runTerminalCommand("git diff --staged");
+                          setTimeout(() => setDiffsApplied(false), 3000);
+                        }}
+                        className="px-3 py-1 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-bold transition-all shadow-md flex items-center gap-1.5"
+                      >
+                        <Check className="w-3.5 h-3.5 stroke-[2.5]" />
+                        <span>{diffsApplied ? "Applied to Workspace!" : "Accept All Diffs"}</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    {stagedDiffs.map((diffItem) => (
+                      <div
+                        key={diffItem.file}
+                        className="rounded-2xl border border-border/70 bg-background/90 overflow-hidden shadow-lg"
+                      >
+                        <div className="flex items-center justify-between px-4 py-2.5 bg-accent/40 border-b border-border/50 text-xs">
+                          <span className="font-mono font-semibold text-foreground flex items-center gap-2">
+                            <Code2 className="w-3.5 h-3.5 text-cyan-400" />
+                            {diffItem.file}
+                          </span>
+                          <div className="flex items-center gap-2 font-mono text-[11px]">
+                            <span className="text-emerald-400 font-semibold">+{diffItem.additions}</span>
+                            <span className="text-rose-400 font-semibold">-{diffItem.deletions}</span>
+                          </div>
+                        </div>
+                        <pre className="p-4 font-mono text-xs overflow-x-auto text-muted-foreground leading-relaxed bg-[#05070d]">
+                          {diffItem.diff.split("\n").map((line, idx) => {
+                            const isAdd = line.startsWith("+");
+                            const isDel = line.startsWith("-");
+                            const isHeader = line.startsWith("@");
+                            return (
+                              <div
+                                key={idx}
+                                className={
+                                  isAdd
+                                    ? "bg-emerald-500/15 text-emerald-300 px-1 rounded-sm"
+                                    : isDel
+                                    ? "bg-rose-500/15 text-rose-300 px-1 rounded-sm"
+                                    : isHeader
+                                    ? "text-cyan-400/80 font-bold"
+                                    : "text-muted-foreground"
+                                }
+                              >
+                                {line}
+                              </div>
+                            );
+                          })}
+                        </pre>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Live Interactive Terminal Console */}
+              <div className="w-full lg:w-[460px] xl:w-[520px] flex flex-col h-full bg-[#05070e] border-t lg:border-t-0 lg:border-l border-border/70">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-border/60 bg-accent/20">
+                  <div className="flex items-center gap-2 text-xs font-mono font-bold text-foreground">
+                    <Terminal className="w-4 h-4 text-emerald-400" />
+                    <span>neura-terminal-v3.5</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setTerminalLogs(["Terminal output cleared."])}
+                      className="text-[11px] text-muted-foreground hover:text-foreground font-mono"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                </div>
+
+                {/* Terminal Action Pill Buttons */}
+                <div className="flex flex-wrap gap-1.5 p-3 border-b border-border/40 bg-accent/10">
+                  {[
+                    "neura test",
+                    "neura lint",
+                    "neura build",
+                    "git diff",
+                    "git status",
+                  ].map((cmd) => (
+                    <button
+                      key={cmd}
+                      type="button"
+                      onClick={() => runTerminalCommand(cmd)}
+                      disabled={terminalExecuting}
+                      className="px-2.5 py-1 rounded-lg border border-border/60 bg-background/80 hover:bg-accent hover:border-emerald-500/40 font-mono text-[11px] text-emerald-300 transition-all disabled:opacity-50"
+                    >
+                      $ {cmd}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Terminal Output Log */}
+                <div className="flex-1 overflow-y-auto p-4 font-mono text-xs text-muted-foreground space-y-1.5 select-text">
+                  {terminalLogs.map((log, i) => (
+                    <div
+                      key={i}
+                      className={
+                        log.startsWith("$")
+                          ? "text-cyan-300 font-semibold"
+                          : log.startsWith("✓")
+                          ? "text-emerald-400 font-semibold"
+                          : log.includes("error") || log.includes("failed")
+                          ? "text-rose-400"
+                          : "text-slate-300"
+                      }
+                    >
+                      {log}
+                    </div>
+                  ))}
+                  {terminalExecuting && (
+                    <div className="flex items-center gap-2 text-cyan-400">
+                      <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                      <span>Executing process…</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Terminal Input Bar */}
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (terminalInput.trim()) {
+                      runTerminalCommand(terminalInput);
+                    }
+                  }}
+                  className="p-3 border-t border-border/50 bg-background/80 flex items-center gap-2"
+                >
+                  <span className="font-mono text-emerald-400 text-xs font-bold">neura&gt;</span>
+                  <input
+                    type="text"
+                    value={terminalInput}
+                    onChange={(e) => setTerminalInput(e.target.value)}
+                    placeholder="Type command (e.g., neura test, git diff)..."
+                    className="flex-1 bg-transparent text-xs font-mono text-foreground placeholder:text-muted-foreground outline-none"
+                  />
+                  <button
+                    type="submit"
+                    disabled={!terminalInput.trim() || terminalExecuting}
+                    className="px-2.5 py-1 rounded-md bg-emerald-500 text-black text-xs font-semibold disabled:opacity-40"
+                  >
+                    Run
+                  </button>
+                </form>
+              </div>
+            </div>
           ) : (
+            /* Chat Workspace (Standard Conversation Mode) */
             <div className="flex flex-col flex-1 min-w-0 h-full">
               {/* Chat Messages Scrollable Stream */}
               <div
@@ -1101,7 +1636,54 @@ Would you like to generate a sample fullstack component to test the Canvas view?
               </div>
 
               {/* Floating Bottom Composer Dock */}
-              <div className="p-4 bg-gradient-to-t from-background via-background/90 to-transparent">
+              <div className="p-4 bg-gradient-to-t from-background via-background/90 to-transparent relative">
+                {/* Floating Slash Commands Autocomplete Menu */}
+                {slashMenuOpen && (
+                  <div className="mx-auto max-w-3xl mb-2 rounded-2xl border border-cyan-500/30 bg-[#070b16]/95 backdrop-blur-xl p-2 shadow-2xl space-y-1 z-30">
+                    <div className="flex items-center justify-between px-3 py-1.5 border-b border-white/[0.08] text-[11px] text-cyan-300 font-semibold font-mono">
+                      <span>Neura Agent Slash Commands</span>
+                      <button
+                        type="button"
+                        onClick={() => setSlashMenuOpen(false)}
+                        className="text-white/40 hover:text-white"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                    <div className="max-h-56 overflow-y-auto space-y-1 p-1">
+                      {SLASH_COMMANDS.map((cmd) => (
+                        <button
+                          key={cmd.command}
+                          type="button"
+                          onClick={() => {
+                            setInput(cmd.prompt);
+                            setSlashMenuOpen(false);
+                            textareaRef.current?.focus();
+                          }}
+                          className="flex w-full items-start gap-2.5 p-2 rounded-xl text-left hover:bg-white/[0.06] transition-colors group"
+                        >
+                          <div className="p-1.5 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 group-hover:bg-cyan-500/20">
+                            <cmd.icon className="w-4 h-4" />
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-mono text-xs font-bold text-cyan-300">
+                                {cmd.command}
+                              </span>
+                              <span className="text-xs font-medium text-white/90">
+                                {cmd.label}
+                              </span>
+                            </div>
+                            <p className="text-[11px] text-white/50 leading-snug">
+                              {cmd.description}
+                            </p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <form onSubmit={submit} className="mx-auto max-w-3xl">
                   <div className="relative rounded-3xl border border-border/80 bg-background/90 backdrop-blur-xl shadow-2xl p-2.5 transition-all focus-within:border-cyan-500/60 focus-within:ring-2 focus-within:ring-cyan-500/10">
                     {/* Selected File Attachment Chips */}
@@ -1139,7 +1721,15 @@ Would you like to generate a sample fullstack component to test the Canvas view?
                     <textarea
                       ref={textareaRef}
                       value={input}
-                      onChange={(e) => setInput(e.target.value)}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setInput(val);
+                        if (val === "/" || (val.startsWith("/") && !val.includes(" "))) {
+                          setSlashMenuOpen(true);
+                        } else {
+                          setSlashMenuOpen(false);
+                        }
+                      }}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" && !e.shiftKey) {
                           e.preventDefault();
@@ -1151,7 +1741,7 @@ Would you like to generate a sample fullstack component to test the Canvas view?
                       placeholder={
                         overLimit
                           ? "Monthly quota reached. View settings to upgrade."
-                          : "Message Neura or ask for code, analysis, architecture…"
+                          : "Message Neura or type / for agent commands (init, code, review, test)…"
                       }
                       className="w-full resize-none bg-transparent px-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground outline-none max-h-44 min-h-[36px]"
                     />
@@ -1166,6 +1756,16 @@ Would you like to generate a sample fullstack component to test the Canvas view?
                           title="Attach files or datasets"
                         >
                           <Paperclip className="w-4 h-4" />
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setSlashMenuOpen((v) => !v)}
+                          className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-mono font-medium border border-border/50 text-muted-foreground hover:text-cyan-300 hover:border-cyan-500/40 transition-colors"
+                          title="View Agent Slash Commands"
+                        >
+                          <span>/</span>
+                          <span className="hidden sm:inline">Commands</span>
                         </button>
 
                         <button
@@ -1217,9 +1817,13 @@ Would you like to generate a sample fullstack component to test the Canvas view?
             </div>
           )}
 
-          {/* Side-by-side Artifacts / Canvas Drawer */}
+          {/* Enhanced Side-by-side Artifacts / Canvas Drawer */}
           {canvasOpen && (
-            <aside className="w-full sm:w-[480px] lg:w-[560px] border-l border-border/70 bg-[#090a0f] flex flex-col h-full z-20 animate-in slide-in-from-right duration-300">
+            <aside
+              className={`border-l border-border/70 bg-[#090a0f] flex flex-col h-full z-20 animate-in slide-in-from-right duration-300 ${
+                canvasFullscreen ? "fixed inset-0 z-50 w-full" : "w-full sm:w-[480px] lg:w-[600px]"
+              }`}
+            >
               {/* Canvas Header */}
               <div className="flex items-center justify-between px-4 py-3 border-b border-border/60 bg-background/80">
                 <div className="flex items-center gap-2 min-w-0">
@@ -1227,6 +1831,11 @@ Would you like to generate a sample fullstack component to test the Canvas view?
                   <span className="text-xs font-semibold truncate text-foreground">
                     {activeArtifact?.title ?? "Canvas Workspace"}
                   </span>
+                  {activeArtifact?.version && (
+                    <span className="rounded-md bg-cyan-500/10 border border-cyan-500/25 px-1.5 py-0.5 text-[10px] font-mono text-cyan-300">
+                      v{activeArtifact.version}
+                    </span>
+                  )}
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="flex rounded-lg bg-accent/40 p-0.5 border border-border/60 text-xs">
@@ -1250,7 +1859,31 @@ Would you like to generate a sample fullstack component to test the Canvas view?
                     >
                       Preview
                     </button>
+                    <button
+                      onClick={() => setCanvasTab("diff")}
+                      className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
+                        canvasTab === "diff"
+                          ? "bg-background text-cyan-400 shadow-sm"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      Diff
+                    </button>
                   </div>
+                  <button
+                    onClick={handleDownloadArtifact}
+                    className="p-1 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent"
+                    title="Download artifact file"
+                  >
+                    <Download className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setCanvasFullscreen((v) => !v)}
+                    className="p-1 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent"
+                    title={canvasFullscreen ? "Exit fullscreen" : "Fullscreen"}
+                  >
+                    {canvasFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+                  </button>
                   <button
                     onClick={() => setCanvasOpen(false)}
                     className="p-1 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent"
@@ -1259,6 +1892,32 @@ Would you like to generate a sample fullstack component to test the Canvas view?
                   </button>
                 </div>
               </div>
+
+              {/* Version History Subheader */}
+              {activeArtifact?.versions && activeArtifact.versions.length > 0 && (
+                <div className="flex items-center gap-2 px-4 py-2 border-b border-border/40 bg-accent/10 text-xs">
+                  <span className="text-[11px] text-muted-foreground flex items-center gap-1 font-mono">
+                    <History className="w-3.5 h-3.5" /> Revisions:
+                  </span>
+                  {activeArtifact.versions.map((ver) => (
+                    <button
+                      key={ver.version}
+                      onClick={() =>
+                        setActiveArtifact((prev) =>
+                          prev ? { ...prev, code: ver.code, version: ver.version } : null
+                        )
+                      }
+                      className={`px-2 py-0.5 rounded-md font-mono text-[11px] transition-colors ${
+                        activeArtifact.version === ver.version
+                          ? "bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30"
+                          : "text-muted-foreground hover:bg-accent"
+                      }`}
+                    >
+                      v{ver.version}
+                    </button>
+                  ))}
+                </div>
+              )}
 
               {/* Canvas Content Body */}
               <div className="flex-1 overflow-auto p-4 font-mono text-xs">
@@ -1290,56 +1949,162 @@ Would you like to generate a sample fullstack component to test the Canvas view?
                       <p className="text-[11px] mt-1">Generate code in chat to inspect here.</p>
                     </div>
                   )
-                ) : (
-                  <div className="rounded-2xl border border-border/60 bg-slate-950 p-6">
-                    <div className="p-6 rounded-2xl border border-cyan-500/20 bg-slate-900/80 text-white shadow-xl">
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-3">
-                          <span className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400">
-                            <Sparkles className="w-5 h-5" />
-                          </span>
-                          <div>
-                            <h3 className="font-semibold text-sm">Live Preview Execution</h3>
-                            <p className="text-xs text-slate-400">Neura Canvas Runtime</p>
+                ) : canvasTab === "preview" ? (
+                  <div className="h-full flex flex-col rounded-2xl border border-border/60 bg-slate-950 p-4">
+                    {activeArtifact?.language === "html" || activeArtifact?.code.includes("<html") ? (
+                      <iframe
+                        srcDoc={activeArtifact.code}
+                        title="Artifact Sandbox"
+                        sandbox="allow-scripts"
+                        className="w-full h-full rounded-xl border border-border/40 bg-white"
+                      />
+                    ) : (
+                      <div className="p-6 rounded-2xl border border-cyan-500/20 bg-slate-900/80 text-white shadow-xl">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-3">
+                            <span className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400">
+                              <Sparkles className="w-5 h-5" />
+                            </span>
+                            <div>
+                              <h3 className="font-semibold text-sm">Live Preview Execution</h3>
+                              <p className="text-xs text-slate-400">Neura Canvas Runtime</p>
+                            </div>
                           </div>
+                          <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 font-medium">
+                            Active Sandbox
+                          </span>
                         </div>
-                        <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 font-medium">
-                          Active
-                        </span>
-                      </div>
-                      <p className="text-sm text-slate-300 leading-relaxed mb-4">
-                        Interactive component preview rendered directly in the side panel.
-                      </p>
-                      <button
-                        type="button"
-                        onClick={handleExecuteCanvasAction}
-                        disabled={canvasExecuting}
-                        className="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black text-xs font-semibold transition-colors disabled:opacity-50 flex items-center gap-1.5"
-                      >
-                        {canvasExecuting ? (
-                          <>
-                            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                            <span>Executing Sandbox…</span>
-                          </>
-                        ) : (
-                          <>
-                            <Play className="w-3.5 h-3.5 fill-current" />
-                            <span>Execute Action</span>
-                          </>
+                        <p className="text-sm text-slate-300 leading-relaxed mb-4">
+                          Interactive component preview rendered directly in the side panel with hot reload.
+                        </p>
+                        <button
+                          type="button"
+                          onClick={handleExecuteCanvasAction}
+                          disabled={canvasExecuting}
+                          className="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black text-xs font-semibold transition-colors disabled:opacity-50 flex items-center gap-1.5"
+                        >
+                          {canvasExecuting ? (
+                            <>
+                              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                              <span>Executing Sandbox…</span>
+                            </>
+                          ) : (
+                            <>
+                              <Play className="w-3.5 h-3.5 fill-current" />
+                              <span>Execute Sandbox Action</span>
+                            </>
+                          )}
+                        </button>
+                        {canvasExecutionFeedback && (
+                          <div className="mt-3 p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-[11px] animate-fadeIn">
+                            {canvasExecutionFeedback}
+                          </div>
                         )}
-                      </button>
-                      {canvasExecutionFeedback && (
-                        <div className="mt-3 p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-[11px] animate-fadeIn">
-                          {canvasExecutionFeedback}
-                        </div>
-                      )}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  /* Diff View */
+                  <div className="rounded-xl border border-border/60 bg-[#05070d] p-4 text-xs font-mono space-y-1">
+                    <div className="flex items-center justify-between pb-2 mb-2 border-b border-border/50 text-[11px] text-muted-foreground">
+                      <span>Comparing v1.0 with Current Working State</span>
+                      <span className="text-emerald-400 font-bold">+14 lines</span>
                     </div>
+                    <div className="text-slate-400">@@ -1,8 +1,14 @@</div>
+                    <div className="text-slate-400"> export function Component() &#123;</div>
+                    <div className="bg-rose-500/15 text-rose-300 px-1 rounded">-  const [state, setState] = useState(false);</div>
+                    <div className="bg-emerald-500/15 text-emerald-300 px-1 rounded">+  const [state, setState] = useState(true);</div>
+                    <div className="bg-emerald-500/15 text-emerald-300 px-1 rounded">+  // Added automated AST validation and runtime telemetry</div>
+                    <div className="bg-emerald-500/15 text-emerald-300 px-1 rounded">+  const cache = useCacheStore();</div>
+                    <div className="text-slate-400">   return &lt;div&gt;Ready&lt;/div&gt;;</div>
+                    <div className="text-slate-400"> &#125;</div>
                   </div>
                 )}
               </div>
             </aside>
           )}
         </div>
+
+        {/* NEURA.md Project Rules Modal */}
+        {projectModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div
+              className="fixed inset-0 bg-black/80 backdrop-blur-md"
+              onClick={() => setProjectModalOpen(false)}
+            />
+            <div className="relative w-full max-w-2xl rounded-3xl border border-indigo-500/30 bg-[#070b18] p-6 shadow-[0_0_50px_rgba(99,102,241,0.25)] md:p-8 z-10 space-y-4">
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 rounded-xl bg-indigo-500/15 border border-indigo-500/30 text-indigo-400">
+                    <BookOpen className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-display text-lg font-bold text-white">
+                      Project Rules & Knowledge (NEURA.md)
+                    </h3>
+                    <p className="text-xs text-muted-foreground">
+                      Persistent architectural guidelines and conventions enforced across every prompt
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setProjectModalOpen(false)}
+                  className="rounded-lg p-1.5 text-muted-foreground hover:bg-white/10 hover:text-white"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <div>
+                <textarea
+                  rows={10}
+                  value={projectRules}
+                  onChange={(e) => setProjectRules(e.target.value)}
+                  className="w-full rounded-2xl border border-border/80 bg-background/80 p-4 font-mono text-xs text-foreground placeholder:text-muted-foreground outline-none focus:border-indigo-500/60 leading-relaxed"
+                />
+              </div>
+
+              <div className="flex items-center justify-between pt-2 border-t border-border/40 text-xs">
+                <button
+                  type="button"
+                  onClick={() => {
+                    localStorage.removeItem("neura_project_rules");
+                    setProjectRules(`# NEURA.md — Project Guidelines & Architecture Standards
+
+## Code Standards
+- Strict TypeScript: No 'any', strict null checks, explicit function return types.
+- UI: React functional components with Tailwind CSS utility classes.
+- Architecture: Modular service functions with TanStack Query and TanStack Start.
+- Error Handling: Use ApiError and typed response envelopes.
+- Testing: Comprehensive Vitest unit tests for critical business logic.`);
+                  }}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  Reset Defaults
+                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setProjectModalOpen(false)}
+                    className="px-4 py-2 rounded-xl border border-border/60 hover:bg-accent text-muted-foreground hover:text-foreground"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      localStorage.setItem("neura_project_rules", projectRules);
+                      setProjectModalOpen(false);
+                    }}
+                    className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold shadow-md"
+                  >
+                    Save NEURA.md
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );

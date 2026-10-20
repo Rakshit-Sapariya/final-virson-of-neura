@@ -83,7 +83,12 @@ function AuthPage() {
     // A `next` path (e.g. an OAuth consent request) must survive the sign-in round-trip.
     const goHome = () => {
       if (next) window.location.replace(next);
-      else navigate({ to: "/app" });
+      else {
+        try {
+          localStorage.setItem("neura_just_onboarded", "true");
+        } catch {}
+        navigate({ to: "/integrations", search: { onboard: "true" } });
+      }
     };
     let active = true;
     supabase.auth.getSession().then(({ data }) => {
@@ -131,7 +136,12 @@ function AuthPage() {
         }),
       );
       if (next) window.location.replace(next);
-      else navigate({ to: "/app" });
+      else {
+        try {
+          localStorage.setItem("neura_just_onboarded", "true");
+        } catch {}
+        navigate({ to: "/integrations", search: { onboard: "true" } });
+      }
     }
   };
 
@@ -225,7 +235,12 @@ function AuthPage() {
       if (verifyError) throw verifyError;
       setOtpStatus("success");
       if (next) window.location.replace(next);
-      else navigate({ to: "/app" });
+      else {
+        try {
+          localStorage.setItem("neura_just_onboarded", "true");
+        } catch {}
+        navigate({ to: "/integrations", search: { onboard: "true" } });
+      }
     } catch (err) {
       setOtpStatus("error");
       setOtpError(errorMessage(err, "That code didn't work. Request a new one."));

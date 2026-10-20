@@ -211,6 +211,9 @@ import { FaSlack, FaAws, FaSalesforce, FaMicrosoft, FaLinkedin } from "react-ico
 import { VscVscode, VscAzure, VscAzureDevops } from "react-icons/vsc";
 
 export const Route = createFileRoute("/integrations")({
+  validateSearch: (s: Record<string, unknown>) => ({
+    onboard: typeof s["onboard"] === "string" ? s["onboard"] : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Integrations & Ecosystem — NEURA - TECH" },
@@ -2434,6 +2437,14 @@ const CATEGORIES: { id: Category; label: string }[] = [
 ];
 
 function IntegrationsPage() {
+  const search = Route.useSearch() as { onboard?: string };
+  const [isOnboarding, setIsOnboarding] = useState(() => {
+    if (typeof window !== "undefined") {
+      const justOnboarded = localStorage.getItem("neura_just_onboarded");
+      if (justOnboarded === "true") return true;
+    }
+    return search?.onboard === "true";
+  });
   const [selectedCategory, setSelectedCategory] = useState<Category>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [connectedMap, setConnectedMap] = useState<Record<string, boolean>>(() => {
@@ -2727,6 +2738,52 @@ print(response.output)`,
 
       {/* Hero Section */}
       <main className="relative z-10 mx-auto max-w-7xl px-6 pt-16 pb-24">
+        {/* Onboarding Welcome Banner (Shown after sign up / sign in) */}
+        {isOnboarding && (
+          <motion.div
+            initial={{ opacity: 0, y: -16 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-12 rounded-3xl border border-cyan-400/40 bg-gradient-to-r from-cyan-950/70 via-blue-950/50 to-indigo-950/60 p-6 shadow-[0_0_50px_rgba(110,231,255,0.2)] md:p-8"
+          >
+            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-cyan-500/15 px-3 py-1 text-xs font-semibold text-cyan-300">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  <span>Welcome to Neura • Account Ready</span>
+                </div>
+                <h2 className="text-2xl font-bold tracking-tight text-white md:text-3xl">
+                  Connect your ecosystem & developer tools
+                </h2>
+                <p className="text-sm text-white/70 max-w-2xl leading-relaxed">
+                  Your account is active. Connect your favorite version control, cloud infrastructure, databases, and workspace tools below so Neura can automate reasoning and code synthesis directly across your stack.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-3 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setIsAddingCustom(true)}
+                  className="flex items-center gap-2 rounded-xl border border-white/20 bg-white/[0.06] px-4 py-2.5 text-xs font-semibold text-white hover:bg-white/10 transition-colors"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  <span>Custom Connection</span>
+                </button>
+                <Link
+                  to="/app"
+                  onClick={() => {
+                    try {
+                      localStorage.removeItem("neura_just_onboarded");
+                    } catch {}
+                  }}
+                  className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-600 px-5 py-2.5 text-xs font-bold text-white shadow-[0_0_25px_rgba(110,231,255,0.4)] hover:shadow-[0_0_35px_rgba(110,231,255,0.6)] transition-all hover:scale-[1.02]"
+                >
+                  <span>Launch Workspace</span>
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+        )}
         <div className="mx-auto max-w-3xl text-center">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
