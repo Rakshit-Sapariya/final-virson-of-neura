@@ -49,7 +49,7 @@ function FeaturesPage() {
           <Reveal>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-mono mb-6 shadow-[0_0_20px_rgba(110,231,255,0.15)]">
               <HiSparkles className="h-3.5 w-3.5" />
-              <span>PAGE 2 OF 5 · CAPABILITIES & RUNTIME</span>
+              <span>PAGE 2 OF 4 · CAPABILITIES & RUNTIME</span>
             </div>
 
             <h1 className="text-[clamp(2.5rem,5.5vw,4.5rem)] font-bold tracking-tight leading-[1.05]">

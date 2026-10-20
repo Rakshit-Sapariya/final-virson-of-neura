@@ -49,7 +49,7 @@ function ModelsPage() {
           <Reveal>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-mono mb-6 shadow-[0_0_20px_rgba(168,85,247,0.15)]">
               <HiCpuChip className="h-3.5 w-3.5" />
-              <span>PAGE 3 OF 5 · MULTI-MODEL MESH & CLUSTERS</span>
+              <span>PAGE 3 OF 4 · MULTI-MODEL MESH & CLUSTERS</span>
             </div>
 
             <h1 className="text-[clamp(2.5rem,5.5vw,4.5rem)] font-bold tracking-tight leading-[1.05]">

@@ -130,7 +130,7 @@ function PricingPage() {
           <Reveal>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono mb-6 shadow-[0_0_20px_rgba(16,185,129,0.15)]">
               <HiCreditCard className="h-3.5 w-3.5" />
-              <span>PAGE 5 OF 5 · PRICING & COMMERCIAL TIERS</span>
+              <span>PAGE 4 OF 4 · PRICING & COMMERCIAL TIERS</span>
             </div>
 
             <h1 className="text-[clamp(2.5rem,5.5vw,4.5rem)] font-bold tracking-tight leading-[1.05]">

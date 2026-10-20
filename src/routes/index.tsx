@@ -40,7 +40,7 @@ export const Route = createFileRoute("/")({
 
 const pages = [
   {
-    pageNumber: "01",
+    pageNumber: "02",
     title: "Capabilities & Interactive Runtime",
     path: "/features",
     icon: HiSparkles,
@@ -50,7 +50,7 @@ const pages = [
       "Deep dive into real-time duplex speech, live side-by-side code execution canvas, and cross-session vector indexing.",
   },
   {
-    pageNumber: "02",
+    pageNumber: "03",
     title: "Model Mesh & Cognitive Routing",
     path: "/models",
     icon: HiCpuChip,
@@ -60,7 +60,7 @@ const pages = [
       "Explore dynamic intent routing across 19 global edge clusters, sub-15ms Edge LPUs, and private in-browser WebGPU.",
   },
   {
-    pageNumber: "03",
+    pageNumber: "04",
     title: "Transparent Pricing & FAQ",
     path: "/pricing",
     icon: HiCreditCard,
@@ -86,7 +86,7 @@ function Index() {
         {/* Neural Core Interactive Cockpit */}
         <AiCoreSection />
 
-        {/* 5-Page Hub & Ecosystem Navigator */}
+        {/* 4-Page Architecture Navigator */}
         <section className="relative mx-auto max-w-7xl px-6 py-28">
           <Reveal className="mx-auto max-w-3xl text-center mb-16">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-mono mb-4 shadow-[0_0_15px_rgba(110,231,255,0.15)]">
