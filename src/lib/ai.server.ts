@@ -13,7 +13,7 @@
 
 export type ProviderMessage = { role: "system" | "user" | "assistant"; content: string };
 
-export type ProviderId = "openai" | "openrouter" | "groq" | "gemini" | "nemotron";
+export type ProviderId = "openai" | "openrouter" | "groq" | "gemini";
 
 /** Cost-aware routing tiers. Cheapest capable model first within each tier. */
 export type RouteTier = "fast" | "balanced" | "deep";
@@ -76,14 +76,89 @@ export function routeForIntent(intent: Intent): RouteTier {
   return INTENT_ROUTE[intent];
 }
 
+/** Verified model catalog mapping canonical identifiers to provider wire configurations */
+export const MODEL_CATALOG: Record<
+  string,
+  {
+    provider: ProviderId;
+    url: string;
+    envKey: string;
+    wireModel: string;
+  }
+> = {
+  // Groq LPU models
+  "groq/llama-3.3-70b": {
+    provider: "groq",
+    url: "https://api.groq.com/openai/v1/chat/completions",
+    envKey: "GROQ_API_KEY",
+    wireModel: "llama-3.3-70b-versatile",
+  },
+  "groq/llama-3.1-8b": {
+    provider: "groq",
+    url: "https://api.groq.com/openai/v1/chat/completions",
+    envKey: "GROQ_API_KEY",
+    wireModel: "llama-3.1-8b-instant",
+  },
+
+  // Gemini / Google direct models
+  "gemini/gemini-2.5-flash": {
+    provider: "gemini",
+    url: "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+    envKey: "GEMINI_API_KEY",
+    wireModel: "gemini-2.5-flash",
+  },
+  "gemini/gemini-2.5-pro": {
+    provider: "gemini",
+    url: "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+    envKey: "GEMINI_API_KEY",
+    wireModel: "gemini-2.5-pro",
+  },
+
+  // Direct OpenAI models
+  "openai/gpt-4o-mini": {
+    provider: "openai",
+    url: "https://api.openai.com/v1/chat/completions",
+    envKey: "OPENAI_API_KEY",
+    wireModel: "gpt-4o-mini",
+  },
+  "openai/gpt-4o": {
+    provider: "openai",
+    url: "https://api.openai.com/v1/chat/completions",
+    envKey: "OPENAI_API_KEY",
+    wireModel: "gpt-4o",
+  },
+
+  // OpenRouter models (namespaced)
+  "openrouter/llama-3.3-70b": {
+    provider: "openrouter",
+    url: "https://openrouter.ai/api/v1/chat/completions",
+    envKey: "OPENROUTER_API_KEY",
+    wireModel: "meta-llama/llama-3.3-70b-instruct:free",
+  },
+  "openrouter/deepseek-r1": {
+    provider: "openrouter",
+    url: "https://openrouter.ai/api/v1/chat/completions",
+    envKey: "OPENROUTER_API_KEY",
+    wireModel: "deepseek/deepseek-r1:free",
+  },
+};
+
+/** UI Picker tag aliases mapped to candidate model chains */
+const TAG_MAP: Record<string, string[]> = {
+  "ultra-deep": ["gemini/gemini-2.5-pro", "gemini/gemini-2.5-flash", "openai/gpt-4o", "groq/llama-3.3-70b"],
+  "omni-vision": ["gemini/gemini-2.5-flash", "openai/gpt-4o-mini", "groq/llama-3.3-70b"],
+  "hyper-speed": ["groq/llama-3.3-70b", "groq/llama-3.1-8b", "gemini/gemini-2.5-flash"],
+  "webgpu-596m": ["groq/llama-3.1-8b", "groq/llama-3.3-70b", "gemini/gemini-2.5-flash"],
+};
+
 /**
- * Gateway-namespaced model ids. The direct-OpenAI provider strips the "openai/" prefix.
+ * Gateway-namespaced model ids per route tier.
  * Order inside a tier = preference order (cheapest capable first, then fallback).
  */
 const ROUTES: Record<RouteTier, string[]> = {
-  fast: ["groq/llama-3.3-70b", "google/gemini-3.1-flash-lite", "openai/gpt-5-nano"],
-  balanced: ["gemini/gemini-2.5-flash", "openai/gpt-5-nano", "google/gemini-3.1-flash-lite"],
-  deep: ["nemotron/nemotron-3-super-120b", "openai/gpt-5-mini", "google/gemini-3.7-flash"],
+  fast: ["groq/llama-3.3-70b", "groq/llama-3.1-8b", "gemini/gemini-2.5-flash", "openai/gpt-4o-mini"],
+  balanced: ["gemini/gemini-2.5-flash", "groq/llama-3.3-70b", "openai/gpt-4o-mini"],
+  deep: ["gemini/gemini-2.5-pro", "gemini/gemini-2.5-flash", "openai/gpt-4o", "groq/llama-3.3-70b"],
 };
 
 export const DEFAULT_ROUTE: RouteTier = "balanced";
@@ -100,10 +175,6 @@ const MAX_OUTPUT_TOKENS: Record<RouteTier, number> = {
   deep: 2000,
 };
 
-/**
- * GPT-5 family models reject `max_tokens` and require `max_completion_tokens`;
- * everything else (Gemini via the gateway) takes `max_tokens`.
- */
 function tokenCapField(model: string): "max_completion_tokens" | "max_tokens" {
   const bare = model.startsWith("openai/") ? model.slice("openai/".length) : model;
   return /^(gpt-5|o\d)/.test(bare) ? "max_completion_tokens" : "max_tokens";
@@ -121,6 +192,21 @@ type ProviderConfig = {
 
 /** Returns the provider that can serve `model`, or null when unconfigured. */
 function resolveProvider(model: string): ProviderConfig | null {
+  // 1. Direct match in model catalog
+  const catalogEntry = MODEL_CATALOG[model];
+  if (catalogEntry) {
+    const key = process.env[catalogEntry.envKey];
+    if (key) {
+      return {
+        id: catalogEntry.provider,
+        url: catalogEntry.url,
+        key,
+        model: catalogEntry.wireModel,
+      };
+    }
+  }
+
+  // 2. OpenAI prefix
   const openaiKey = process.env["OPENAI_API_KEY"];
   if (openaiKey && model.startsWith("openai/")) {
     return {
@@ -130,61 +216,87 @@ function resolveProvider(model: string): ProviderConfig | null {
       model: model.slice("openai/".length),
     };
   }
-  const openrouterKey = process.env["OPENROUTER_API_KEY"];
-  if (openrouterKey) {
-    return {
-      id: "openrouter",
-      url: "https://openrouter.ai/api/v1/chat/completions",
-      key: openrouterKey,
-      model,
-    };
-  }
+
+  // 3. Groq prefix or llama wire model
   const groqKey = process.env["GROQ_API_KEY"];
-  if (groqKey && (model.includes("groq") || model.includes("llama"))) {
+  if (groqKey && (model.startsWith("groq/") || model.includes("llama"))) {
+    const bare = model.startsWith("groq/") ? model.slice("groq/".length) : model;
     return {
       id: "groq",
       url: "https://api.groq.com/openai/v1/chat/completions",
       key: groqKey,
-      model: "llama-3.3-70b-versatile",
+      model: bare.includes("8b") ? "llama-3.1-8b-instant" : "llama-3.3-70b-versatile",
     };
   }
+
+  // 4. Gemini prefix
   const geminiKey = process.env["GEMINI_API_KEY"];
-  if (geminiKey && (model.includes("gemini") || model.includes("google"))) {
+  if (geminiKey && (model.startsWith("gemini/") || model.startsWith("google/"))) {
+    const bare = model.replace(/^(gemini|google)\//, "");
     return {
       id: "gemini",
       url: "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
       key: geminiKey,
-      model: "gemini-2.5-flash",
+      model: bare.includes("pro") ? "gemini-2.5-pro" : "gemini-2.5-flash",
     };
   }
-  // Free live Nemotron gateway for deep reasoning
-  if (model.includes("nemotron") || model.includes("deep") || model.includes("nvidia")) {
+
+  // 5. OpenRouter: only when explicitly prefixed or containing openrouter format
+  const openrouterKey = process.env["OPENROUTER_API_KEY"];
+  if (
+    openrouterKey &&
+    (model.startsWith("openrouter/") ||
+      (model.includes("/") &&
+        !model.startsWith("gemini/") &&
+        !model.startsWith("groq/") &&
+        !model.startsWith("openai/")))
+  ) {
+    const wireModel = model.startsWith("openrouter/") ? model.slice("openrouter/".length) : model;
     return {
-      id: "nemotron",
-      url: "https://api.kilo.ai/api/gateway/chat/completions",
-      key: "free",
-      model: "nvidia/nemotron-3-super-120b-a12b:free",
+      id: "openrouter",
+      url: "https://openrouter.ai/api/v1/chat/completions",
+      key: openrouterKey,
+      model: wireModel,
     };
   }
+
   return null;
 }
 
 /** Ordered, de-duplicated list of candidates that are actually configured. */
 function candidates(route: RouteTier, model?: string): ProviderConfig[] {
-  const ids = model ? [model, ...ROUTES[route]] : ROUTES[route];
+  const modelIds = model && TAG_MAP[model] ? TAG_MAP[model] : model ? [model] : [];
+  const ids = [...modelIds, ...ROUTES[route]];
   const out: ProviderConfig[] = [];
+
   for (const id of ids) {
     const cfg = resolveProvider(id);
     if (!cfg) continue;
     if (out.some((c) => c.id === cfg.id && c.model === cfg.model)) continue;
     out.push(cfg);
   }
+
+  // Fallback: If no candidate matched the requested models, find any configured provider in the catalog
+  if (out.length === 0) {
+    for (const [catId] of Object.entries(MODEL_CATALOG)) {
+      const cfg = resolveProvider(catId);
+      if (!cfg) continue;
+      if (out.some((c) => c.id === cfg.id && c.model === cfg.model)) continue;
+      out.push(cfg);
+    }
+  }
+
   return out;
 }
 
-/** True when any provider key is present or free gateway is available. */
+/** True when any real AI provider key is configured in the environment. */
 export function isAiConfigured(): boolean {
-  return true;
+  return Boolean(
+    process.env["OPENAI_API_KEY"] ||
+      process.env["OPENROUTER_API_KEY"] ||
+      process.env["GROQ_API_KEY"] ||
+      process.env["GEMINI_API_KEY"],
+  );
 }
 
 export type AiErrorKind =
@@ -217,13 +329,12 @@ const MESSAGES: Record<AiErrorKind, string> = {
 };
 
 function classify(status: number): { kind: AiErrorKind; retryable: boolean } {
-  // Client/config errors are deterministic: retrying them on another provider
-  // only burns credits and latency, so they stop the fallback chain.
-  if (status === 400 || status === 404 || status === 422)
-    return { kind: "bad_request", retryable: false };
+  // 404 (model not found on provider) and 400 (model specific param mismatch)
+  // are retryable so the fallback chain can proceed to another configured candidate!
+  if (status === 404) return { kind: "bad_request", retryable: true };
+  if (status === 400 || status === 422) return { kind: "bad_request", retryable: true };
   if (status === 401 || status === 403) return { kind: "auth", retryable: false };
   if (status === 429) return { kind: "rate_limit", retryable: true };
-  // Quota is per-provider, so another configured provider may still serve it.
   if (status === 402) return { kind: "quota", retryable: true };
   return { kind: "upstream", retryable: true };
 }

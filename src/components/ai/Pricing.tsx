@@ -13,6 +13,8 @@ import { Reveal } from "./Reveal";
 import { MagneticButton } from "./MagneticButton";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useSession } from "@/hooks/useSession";
+import { useServerFn } from "@tanstack/react-start";
+import { upgradePlan } from "@/lib/account.functions";
 
 type Billing = "monthly" | "annual";
 
@@ -123,20 +125,40 @@ export function Pricing() {
     requirement: "",
   });
 
+  const upgradePlanFn = useServerFn(upgradePlan);
+  const [upgrading, setUpgrading] = useState(false);
+  const [upgradeError, setUpgradeError] = useState<string | null>(null);
+
   const handleStartFree = () => {
-    localStorage.setItem("neura_demo_session", "true");
     navigate({ to: "/app" });
   };
 
-  const handleActivatePro = () => {
-    setProSuccess(true);
-    localStorage.setItem("neura_plan", "pro");
-    localStorage.setItem("neura_demo_session", "true");
-    setTimeout(() => {
-      setProModalOpen(false);
-      setProSuccess(false);
-      navigate({ to: "/app" });
-    }, 1200);
+  const handleActivatePro = async () => {
+    if (!isAuthenticated) {
+      navigate({ to: "/auth", search: { next: "/pricing" } });
+      return;
+    }
+
+    setUpgrading(true);
+    setUpgradeError(null);
+    try {
+      const res = await upgradePlanFn({ data: { tier: "pro", billing } });
+      if (res.checkoutUrl) {
+        window.location.href = res.checkoutUrl;
+        return;
+      }
+      setProSuccess(true);
+      setTimeout(() => {
+        setProModalOpen(false);
+        setProSuccess(false);
+        setUpgrading(false);
+        navigate({ to: "/account" });
+      }, 1400);
+    } catch (err: any) {
+      console.error("[billing:upgrade]", err);
+      setUpgradeError(err?.message || "Failed to activate Pro subscription. Please verify session.");
+      setUpgrading(false);
+    }
   };
 
   const handleEnterpriseSubmit = (e: React.FormEvent) => {
@@ -524,6 +546,11 @@ export function Pricing() {
               </div>
 
               <div className="mt-6 pt-4 border-t border-white/10 flex flex-col gap-3">
+                {upgradeError && (
+                  <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs text-center">
+                    {upgradeError}
+                  </div>
+                )}
                 {proSuccess ? (
                   <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold flex items-center justify-center gap-2 animate-pulse">
                     <HiCheck className="w-4 h-4" />
@@ -532,11 +559,12 @@ export function Pricing() {
                 ) : (
                   <button
                     type="button"
+                    disabled={upgrading}
                     onClick={handleActivatePro}
-                    className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-cyan-400 via-cyan-300 to-purple-500 text-black font-bold text-sm hover:opacity-95 shadow-[0_0_30px_rgba(110,231,255,0.4)] transition-all flex items-center justify-center gap-2"
+                    className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-cyan-400 via-cyan-300 to-purple-500 text-black font-bold text-sm hover:opacity-95 shadow-[0_0_30px_rgba(110,231,255,0.4)] transition-all flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer"
                   >
                     <HiSparkles className="w-4 h-4" />
-                    <span>Activate Neura Pro Instantly</span>
+                    <span>{upgrading ? "Verifying Subscription..." : "Activate Neura Pro Instantly"}</span>
                   </button>
                 )}
                 <p className="text-[11px] text-center text-slate-500">

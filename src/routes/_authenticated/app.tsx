@@ -351,7 +351,9 @@ function AppPage() {
   const [lite, setLite] = useState(false);
 
   // File Attachments State
-  const [attachments, setAttachments] = useState<{ id: string; name: string; size: string; type: string }[]>([]);
+  const [attachments, setAttachments] = useState<
+    { id: string; name: string; size: string; type: string; content?: string }[]
+  >([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Canvas Action Execution State
@@ -361,13 +363,33 @@ function AppPage() {
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
-    const newItems = Array.from(files).map((f) => ({
-      id: Math.random().toString(36).substring(7),
-      name: f.name,
-      size: f.size > 1024 * 1024 ? `${(f.size / (1024 * 1024)).toFixed(1)} MB` : `${Math.round(f.size / 1024)} KB`,
-      type: f.type || "file",
-    }));
-    setAttachments((prev) => [...prev, ...newItems]);
+    Array.from(files).forEach((f) => {
+      const reader = new FileReader();
+      const id = Math.random().toString(36).substring(7);
+      const sizeStr =
+        f.size > 1024 * 1024
+          ? `${(f.size / (1024 * 1024)).toFixed(1)} MB`
+          : `${Math.round(f.size / 1024)} KB`;
+      const isText =
+        f.type.startsWith("text/") ||
+        /\.(ts|tsx|js|jsx|json|md|py|rs|go|html|css|sql|txt|csv|yaml|yml|env)$/i.test(f.name);
+
+      if (isText) {
+        reader.onload = () => {
+          const content = String(reader.result || "");
+          setAttachments((prev) => [
+            ...prev,
+            { id, name: f.name, size: sizeStr, type: f.type || "text", content },
+          ]);
+        };
+        reader.readAsText(f);
+      } else {
+        setAttachments((prev) => [
+          ...prev,
+          { id, name: f.name, size: sizeStr, type: f.type || "file" },
+        ]);
+      }
+    });
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
@@ -469,13 +491,18 @@ Would you like to generate a sample fullstack component to test the Canvas view?
     }
   }, [input]);
 
-  // Session checks
+  // Dev-only demo session check (isolated to explicit dev flag)
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const demoSession = localStorage.getItem("neura_demo_session");
-      const savedUser = localStorage.getItem("neura_demo_user");
-      if (demoSession === "active" || demoSession === "true" || !demoSession) {
-        setIsDemo(true);
+      const isDev = Boolean(import.meta.env.DEV);
+      const urlParams = new URLSearchParams(window.location.search);
+      const demoParam = urlParams.get("demo") === "true";
+      const demoStored = localStorage.getItem("neura_demo_session") === "true";
+      const allowDemo = isDev && (demoParam || demoStored);
+
+      setIsDemo(allowDemo);
+      if (allowDemo) {
+        const savedUser = localStorage.getItem("neura_demo_user");
         if (savedUser) {
           try {
             setDemoUser(JSON.parse(savedUser));
@@ -524,7 +551,8 @@ Would you like to generate a sample fullstack component to test the Canvas view?
   });
 
   useEffect(() => {
-    if (workspace.isError || conversations.isError) {
+    const isDev = Boolean(import.meta.env.DEV);
+    if ((workspace.isError || conversations.isError) && isDev && localStorage.getItem("neura_demo_session") === "true") {
       setIsDemo(true);
     }
   }, [workspace.isError, conversations.isError]);
@@ -553,7 +581,7 @@ Would you like to generate a sample fullstack component to test the Canvas view?
 
   const removeChat = useMutation({
     mutationFn: (conversationId: string) =>
-      deleteConversationFn({ data: { conversationId } }),
+      deleteConversationFn({ data: { id: conversationId, conversationId } }),
     onSuccess: (_, deletedId) => {
       qc.invalidateQueries({ queryKey: ["conversations", workspaceId] });
       if (activeId === deletedId) {
@@ -568,23 +596,25 @@ Would you like to generate a sample fullstack component to test the Canvas view?
       return sendMessageFn({
         data: {
           conversationId: activeId ?? undefined,
-          workspaceId: activeId ? undefined : workspaceId!,
+          workspaceId: activeId ? undefined : (workspaceId ?? undefined),
           content,
           mode: selectedModel.tier === "lite" ? "fast" : selectedModel.tier,
           model: selectedModel.tag,
+          retryUserMessageId: retryId,
           retryMessageId: retryId,
+          webSearch: webSearchActive,
+          thinking: thinkingMode,
         },
       });
     },
     onSuccess: (result) => {
-      const conversationId = result.userMessage?.conversation_id;
-      const wasFirstMessage = !activeId && !!conversationId;
-
-      if (wasFirstMessage) {
-        setActiveId(conversationId!);
+      const convId = result.conversationId ?? result.userMessage?.conversation_id;
+      if (convId && (!activeId || activeId !== convId)) {
+        setActiveId(convId);
+        qc.invalidateQueries({ queryKey: ["conversations", workspaceId] });
       }
 
-      qc.invalidateQueries({ queryKey: ["messages", activeId ?? conversationId] });
+      qc.invalidateQueries({ queryKey: ["messages", activeId ?? convId] });
       qc.invalidateQueries({ queryKey: ["usage-status"] });
     },
     onError: (e) => {
@@ -704,8 +734,15 @@ Would you like to generate a sample fullstack component to test the Canvas view?
 
     let content = rawContent;
     if (attachments.length > 0) {
-      const attNames = attachments.map((a) => `${a.name} (${a.size})`).join(", ");
-      content = `${rawContent}\n\n📎 Attached files: ${attNames}`;
+      const fileBlocks = attachments
+        .map((a) => {
+          if (a.content) {
+            return `--- File Attachment: ${a.name} (${a.size}) ---\n\`\`\`${a.name.split(".").pop() || ""}\n${a.content}\n\`\`\`\n--- End of ${a.name} ---`;
+          }
+          return `--- Attached File: ${a.name} (${a.size}) ---`;
+        })
+        .join("\n\n");
+      content = `${rawContent}\n\n${fileBlocks}`;
       setAttachments([]);
     }
 

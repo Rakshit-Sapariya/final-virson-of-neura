@@ -89,7 +89,18 @@ export const updateConversation = createServerFn({ method: "POST" })
 /** DELETE /api/conversations/:id */
 export const deleteConversation = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => z.object({ id: z.string().uuid() }).parse(input))
+  .inputValidator((input: unknown) =>
+    z
+      .object({
+        id: z.string().uuid().optional(),
+        conversationId: z.string().uuid().optional(),
+      })
+      .refine((d) => d.id || d.conversationId, {
+        message: "Must provide either id or conversationId",
+      })
+      .transform((d) => ({ id: (d.id ?? d.conversationId)! }))
+      .parse(input),
+  )
   .handler(async ({ data, context }) => {
     const { error } = await context.supabase.from("conversations").delete().eq("id", data.id);
     if (error) dbFail("deleteConversation", error);

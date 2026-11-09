@@ -25,11 +25,14 @@ function AuthenticatedLayout() {
     let active = true;
 
     (async () => {
-      // 1. Instant demo session check
-      if (typeof window !== "undefined") {
+      const isDev = Boolean(import.meta.env.DEV);
+
+      // 1. Explicit dev demo session check (isolated to development environments only)
+      if (typeof window !== "undefined" && isDev) {
         const urlParams = new URLSearchParams(window.location.search);
-        const demo = localStorage.getItem("neura_demo_session");
-        if (demo === "true" || demo === "active" || urlParams.get("demo") === "true") {
+        const demoRequested = urlParams.get("demo") === "true";
+        const demoActive = localStorage.getItem("neura_demo_session") === "true";
+        if (demoRequested || demoActive) {
           localStorage.setItem("neura_demo_session", "true");
           if (!active) return;
           setState("allowed");
@@ -37,27 +40,39 @@ function AuthenticatedLayout() {
         }
       }
 
-      // 2. Safe Supabase session check with resilient demo fallback
+      // 2. Safe Supabase session verification
       try {
         const { data: local } = await supabase.auth.getSession();
         if (!active) return;
         if (!local?.session) {
-          // Seamlessly open demo account when no remote Supabase session exists
-          localStorage.setItem("neura_demo_session", "true");
-          setState("allowed");
+          // Unauthenticated visitors redirect to auth page
+          navigate({
+            to: "/auth",
+            search: { next: window.location.pathname },
+            replace: true,
+          });
           return;
         }
-        setState("allowed");
+
         const { data, error } = await supabase.auth.getUser();
         if (!active) return;
         if (error || !data?.user) {
-          localStorage.setItem("neura_demo_session", "true");
-          setState("allowed");
+          navigate({
+            to: "/auth",
+            search: { next: window.location.pathname },
+            replace: true,
+          });
+          return;
         }
+
+        setState("allowed");
       } catch (err) {
-        console.warn("[Neura Auth] Falling back to demo mode:", err);
-        localStorage.setItem("neura_demo_session", "true");
-        if (active) setState("allowed");
+        console.warn("[Neura Auth] Session verification failed:", err);
+        navigate({
+          to: "/auth",
+          search: { next: window.location.pathname },
+          replace: true,
+        });
       }
     })();
 
@@ -67,7 +82,14 @@ function AuthenticatedLayout() {
   }, [navigate]);
 
   if (state !== "allowed") {
-    return <div aria-hidden className="h-[100dvh] bg-background" />;
+    return (
+      <div className="flex h-[100dvh] items-center justify-center bg-[#05070f] text-white">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-cyan-400 border-t-transparent" />
+          <span className="text-xs text-white/50 font-mono tracking-widest uppercase">Verifying Session...</span>
+        </div>
+      </div>
+    );
   }
 
   return <Outlet />;
