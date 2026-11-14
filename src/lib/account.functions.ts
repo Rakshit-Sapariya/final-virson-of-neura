@@ -84,7 +84,7 @@ export const upgradePlan = createServerFn({ method: "POST" })
         const stripe = new Stripe(stripeKey, { apiVersion: "2024-11-20.acacia" as any });
         const priceAmount =
           data.tier === "pro" ? (data.billing === "annual" ? 12000 : 1200) : 100000;
-        const appUrl = process.env["APP_URL"] || "http://localhost:3000";
+        const appUrl = process.env["APP_URL"] || "http://localhost:3008";
         const session = await stripe.checkout.sessions.create({
           payment_method_types: ["card"],
           line_items: [
