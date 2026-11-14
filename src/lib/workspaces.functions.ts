@@ -21,7 +21,7 @@ export const listWorkspaces = createServerFn({ method: "GET" })
 /** GET /api/workspaces/:id — RLS + explicit owner filter prevents IDOR. */
 export const getWorkspace = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => idSchema.parse(input))
+  .validator((input: unknown) => idSchema.parse(input))
   .handler(async ({ data, context }) => {
     const { data: workspace, error } = await context.supabase
       .from("workspaces")
@@ -37,7 +37,7 @@ export const getWorkspace = createServerFn({ method: "GET" })
 /** POST /api/workspaces */
 export const createWorkspace = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
+  .validator((input: unknown) =>
     z
       .object({
         name: z.string().trim().min(1).max(80),
@@ -58,7 +58,7 @@ export const createWorkspace = createServerFn({ method: "POST" })
 /** PUT /api/workspaces/:id */
 export const updateWorkspace = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
+  .validator((input: unknown) =>
     z
       .object({
         id: z.string().uuid(),
@@ -87,7 +87,7 @@ export const updateWorkspace = createServerFn({ method: "POST" })
 /** DELETE /api/workspaces/:id */
 export const deleteWorkspace = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => idSchema.parse(input))
+  .validator((input: unknown) => idSchema.parse(input))
   .handler(async ({ data, context }) => {
     const { error } = await context.supabase
       .from("workspaces")

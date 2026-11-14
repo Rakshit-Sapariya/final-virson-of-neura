@@ -9,7 +9,7 @@ import { dbFail, fail } from "./api-error";
 /** GET /api/conversations/:id/messages — RLS scopes rows to the workspace owner. */
 export const listMessages = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => z.object({ conversationId: z.string().uuid() }).parse(input))
+  .validator((input: unknown) => z.object({ conversationId: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
     const { data: rows, error } = await context.supabase
       .from("messages")
@@ -26,7 +26,7 @@ export const listMessages = createServerFn({ method: "GET" })
  */
 export const sendMessage = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
+  .validator((input: unknown) =>
     z
       .object({
         conversationId: z.string().uuid().optional(),
@@ -77,7 +77,7 @@ export const sendMessage = createServerFn({ method: "POST" })
       if (!wsId) {
         const { data: newWs, error: wsErr } = await supabase
           .from("workspaces")
-          .insert({ name: "Personal Workspace", owner_id: context.userId })
+          .insert({ name: "Personal Workspace", user_id: context.userId })
           .select("id")
           .single();
         if (wsErr) dbFail("sendMessage.createWorkspace", wsErr);

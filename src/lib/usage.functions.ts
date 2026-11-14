@@ -60,7 +60,7 @@ export const getUsageStatus = createServerFn({ method: "GET" })
 /** POST /api/usage/track — atomic increment, safe under concurrency. */
 export const trackUsage = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
+  .validator((input: unknown) =>
     z.object({ metric: z.enum(metrics), amount: z.number().int().min(1).max(600) }).parse(input),
   )
   .handler(async ({ data, context }) => {

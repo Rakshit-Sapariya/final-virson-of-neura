@@ -467,12 +467,14 @@ Would you like to generate a sample fullstack component to test the Canvas view?
     ],
   });
 
+  const handleNewChatRef = useRef<() => void>(() => {});
+
   // Hotkey support (Ctrl+K for New Chat, Ctrl+[ for Sidebar)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
-        handleNewChat();
+        handleNewChatRef.current();
       }
       if ((e.ctrlKey || e.metaKey) && e.key === "[") {
         e.preventDefault();
@@ -566,7 +568,7 @@ Would you like to generate a sample fullstack component to test the Canvas view?
   const newChat = useMutation({
     mutationFn: () =>
       createConversationFn({
-        data: { workspaceId: workspaceId!, title: "New conversation" },
+        data: { workspaceId: workspaceId ?? undefined, title: "New conversation" },
       }),
     onSuccess: (c) => {
       qc.invalidateQueries({ queryKey: ["conversations", workspaceId] });
@@ -708,6 +710,7 @@ Would you like to generate a sample fullstack component to test the Canvas view?
     }
     newChat.mutate();
   };
+  handleNewChatRef.current = handleNewChat;
 
   const handleRemoveChat = (id: string) => {
     if (isDemo) {
@@ -2168,9 +2171,31 @@ const MessageBubble = memo(function MessageBubble({
   const [copied, setCopied] = useState(false);
   const [reasoningExpanded, setReasoningExpanded] = useState(false);
 
+  // Extract <thinking>...</thinking>, <thought>...</thought>, or <think>...</think> from content
+  const { cleanContent, effectiveReasoning } = useMemo(() => {
+    let thoughtText = (reasoning || "").trim();
+    let mainContent = content;
+
+    const thinkMatch = mainContent.match(/<(?:thinking|thought|think)>([\s\S]*?)<\/(?:thinking|thought|think)>/i);
+    if (thinkMatch) {
+      if (!thoughtText) {
+        thoughtText = thinkMatch[1].trim();
+      }
+      mainContent = mainContent.replace(/<(?:thinking|thought|think)>[\s\S]*?<\/(?:thinking|thought|think)>/gi, "").trim();
+    } else {
+      const openThink = mainContent.match(/^<(?:thinking|thought|think)>([\s\S]*?)$/i);
+      if (openThink && !thoughtText) {
+        thoughtText = openThink[1].trim();
+        mainContent = "";
+      }
+    }
+
+    return { cleanContent: mainContent, effectiveReasoning: thoughtText };
+  }, [content, reasoning]);
+
   const handleCopy = () => {
     if (typeof navigator !== "undefined" && navigator.clipboard) {
-      navigator.clipboard.writeText(content);
+      navigator.clipboard.writeText(cleanContent);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
@@ -2202,7 +2227,7 @@ const MessageBubble = memo(function MessageBubble({
         )}
 
         {/* Reasoning / Thought Dropdown */}
-        {reasoning && (
+        {effectiveReasoning && (
           <div className="rounded-xl border border-indigo-500/20 bg-indigo-950/20 overflow-hidden text-xs">
             <button
               onClick={() => setReasoningExpanded((v) => !v)}
@@ -2210,7 +2235,7 @@ const MessageBubble = memo(function MessageBubble({
             >
               <div className="flex items-center gap-2">
                 <Brain className="w-3.5 h-3.5 text-indigo-400" />
-                <span>Thought for 1.8 seconds</span>
+                <span>Deep Reasoning Thought</span>
               </div>
               <ChevronRight
                 className={`w-3.5 h-3.5 transition-transform ${
@@ -2219,66 +2244,68 @@ const MessageBubble = memo(function MessageBubble({
               />
             </button>
             {reasoningExpanded && (
-              <div className="px-3 pb-3 pt-1 text-muted-foreground font-mono text-[11px] leading-relaxed border-t border-indigo-500/10">
-                {reasoning}
+              <div className="px-3 pb-3 pt-1 text-muted-foreground font-mono text-[11px] leading-relaxed border-t border-indigo-500/10 whitespace-pre-wrap">
+                {effectiveReasoning}
               </div>
             )}
           </div>
         )}
 
         {/* Markdown Content */}
-        <div className="rounded-3xl border border-border/70 bg-accent/25 px-5 py-4 text-foreground leading-relaxed shadow-md prose prose-invert max-w-none prose-p:my-2 prose-pre:my-3">
-          <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
-            components={{
-              code({ node, inline, className, children, ...props }: any) {
-                const match = /language-(\w+)/.exec(className || "");
-                const codeString = String(children).replace(/\n$/, "");
-                if (!inline && match) {
-                  return (
-                    <div className="rounded-xl border border-border/80 bg-black/60 my-3 overflow-hidden">
-                      <div className="flex items-center justify-between px-3.5 py-1.5 border-b border-border/60 bg-accent/30 text-[11px] text-muted-foreground font-mono">
-                        <span>{match[1]}</span>
-                        <div className="flex items-center gap-2">
-                          <button
-                            type="button"
-                            onClick={() => onOpenCanvas(codeString, match[1])}
-                            className="flex items-center gap-1 hover:text-cyan-400 transition-colors"
-                          >
-                            <Code2 className="w-3 h-3" />
-                            <span>Canvas</span>
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              if (navigator.clipboard) {
-                                navigator.clipboard.writeText(codeString);
-                              }
-                            }}
-                            className="flex items-center gap-1 hover:text-cyan-400 transition-colors"
-                          >
-                            <Copy className="w-3 h-3" />
-                            <span>Copy</span>
-                          </button>
+        {cleanContent && (
+          <div className="rounded-3xl border border-border/70 bg-accent/25 px-5 py-4 text-foreground leading-relaxed shadow-md prose prose-invert max-w-none prose-p:my-2 prose-pre:my-3">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                code({ node, inline, className, children, ...props }: any) {
+                  const match = /language-(\w+)/.exec(className || "");
+                  const codeString = String(children).replace(/\n$/, "");
+                  if (!inline && match) {
+                    return (
+                      <div className="rounded-xl border border-border/80 bg-black/60 my-3 overflow-hidden">
+                        <div className="flex items-center justify-between px-3.5 py-1.5 border-b border-border/60 bg-accent/30 text-[11px] text-muted-foreground font-mono">
+                          <span>{match[1]}</span>
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => onOpenCanvas(codeString, match[1])}
+                              className="flex items-center gap-1 hover:text-cyan-400 transition-colors"
+                            >
+                              <Code2 className="w-3 h-3" />
+                              <span>Canvas</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (navigator.clipboard) {
+                                  navigator.clipboard.writeText(codeString);
+                                }
+                              }}
+                              className="flex items-center gap-1 hover:text-cyan-400 transition-colors"
+                            >
+                              <Copy className="w-3 h-3" />
+                              <span>Copy</span>
+                            </button>
+                          </div>
                         </div>
+                        <pre className="p-3.5 overflow-x-auto text-xs font-mono text-cyan-200">
+                          <code>{children}</code>
+                        </pre>
                       </div>
-                      <pre className="p-3.5 overflow-x-auto text-xs font-mono text-cyan-200">
-                        <code>{children}</code>
-                      </pre>
-                    </div>
+                    );
+                  }
+                  return (
+                    <code className="rounded bg-accent/50 px-1 py-0.5 text-cyan-300 font-mono text-xs" {...props}>
+                      {children}
+                    </code>
                   );
-                }
-                return (
-                  <code className="rounded bg-accent/50 px-1 py-0.5 text-cyan-300 font-mono text-xs" {...props}>
-                    {children}
-                  </code>
-                );
-              },
-            }}
-          >
-            {content}
-          </ReactMarkdown>
-        </div>
+                },
+              }}
+            >
+              {cleanContent}
+            </ReactMarkdown>
+          </div>
+        )}
 
         {/* Message Action Footer */}
         <div className="flex items-center gap-2 px-1 text-muted-foreground text-xs">

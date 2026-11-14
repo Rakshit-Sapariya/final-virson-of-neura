@@ -6,7 +6,7 @@ import { dbFail, fail } from "./api-error";
 /** GET /api/conversations (optionally scoped to a workspace) */
 export const listConversations = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
+  .validator((input: unknown) =>
     z.object({ workspaceId: z.string().uuid().optional() }).parse(input ?? {}),
   )
   .handler(async ({ data, context }) => {
@@ -24,7 +24,7 @@ export const listConversations = createServerFn({ method: "GET" })
 /** GET /api/conversations/:id — RLS restricts to the workspace owner. */
 export const getConversation = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => z.object({ id: z.string().uuid() }).parse(input))
+  .validator((input: unknown) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
     const { data: row, error } = await context.supabase
       .from("conversations")
@@ -39,19 +39,40 @@ export const getConversation = createServerFn({ method: "GET" })
 /** POST /api/conversations */
 export const createConversation = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
+  .validator((input: unknown) =>
     z
       .object({
-        workspaceId: z.string().uuid(),
+        workspaceId: z.string().uuid().optional(),
         title: z.string().trim().min(1).max(120).optional(),
       })
       .parse(input),
   )
   .handler(async ({ data, context }) => {
+    let wsId = data.workspaceId;
+    if (!wsId) {
+      const { data: ws } = await context.supabase
+        .from("workspaces")
+        .select("id")
+        .eq("user_id", context.userId)
+        .order("created_at", { ascending: true })
+        .limit(1)
+        .maybeSingle();
+      wsId = ws?.id;
+    }
+    if (!wsId) {
+      const { data: newWs, error: wsErr } = await context.supabase
+        .from("workspaces")
+        .insert({ name: "Personal Workspace", user_id: context.userId })
+        .select("id")
+        .single();
+      if (wsErr) dbFail("createConversation.createWorkspace", wsErr);
+      wsId = newWs.id;
+    }
+
     const { data: created, error } = await context.supabase
       .from("conversations")
       .insert({
-        workspace_id: data.workspaceId,
+        workspace_id: wsId,
         title: data.title ?? "New conversation",
       })
       .select("*")
@@ -63,7 +84,7 @@ export const createConversation = createServerFn({ method: "POST" })
 /** PUT /api/conversations/:id */
 export const updateConversation = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
+  .validator((input: unknown) =>
     z
       .object({
         id: z.string().uuid(),
@@ -89,7 +110,7 @@ export const updateConversation = createServerFn({ method: "POST" })
 /** DELETE /api/conversations/:id */
 export const deleteConversation = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
+  .validator((input: unknown) =>
     z
       .object({
         id: z.string().uuid().optional(),

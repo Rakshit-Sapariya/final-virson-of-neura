@@ -71,8 +71,8 @@ function AccountPage() {
     }
   }, []);
 
-  const profile = useQuery({ queryKey: ["profile"], queryFn: () => profileFn({}), enabled: !isDemo });
-  const usage = useQuery({ queryKey: ["usage-status"], queryFn: () => usageFn({}), enabled: !isDemo });
+  const profile = useQuery({ queryKey: ["profile"], queryFn: () => profileFn(), enabled: !isDemo });
+  const usage = useQuery({ queryKey: ["usage-status"], queryFn: () => usageFn(), enabled: !isDemo });
 
   const saveName = useMutation({
     mutationFn: (full_name: string) => updateProfileFn({ data: { full_name } }),
@@ -94,7 +94,7 @@ function AccountPage() {
   });
 
   const removeAccount = useMutation({
-    mutationFn: () => deleteAccountFn({}),
+    mutationFn: () => deleteAccountFn(),
     onSuccess: async () => {
       await signOutCleanly(qc);
       navigate({ to: "/", replace: true });

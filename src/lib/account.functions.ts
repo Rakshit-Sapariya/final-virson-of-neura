@@ -35,7 +35,7 @@ export const getProfile = createServerFn({ method: "GET" })
 /** PUT /api/users/profile */
 export const updateProfile = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
+  .validator((input: unknown) =>
     z
       .object({
         full_name: z.string().trim().min(1).max(80).optional(),
@@ -65,7 +65,7 @@ export const updateProfile = createServerFn({ method: "POST" })
  */
 export const upgradePlan = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
+  .validator((input: unknown) =>
     z
       .object({
         tier: z.enum(["pro", "enterprise"]),
@@ -133,7 +133,7 @@ export const upgradePlan = createServerFn({ method: "POST" })
  */
 export const changePlan = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
+  .validator((input: unknown) =>
     z.object({ tier: z.enum(["free", "pro", "enterprise"]) }).parse(input),
   )
   .handler(async ({ data, context }) => {
