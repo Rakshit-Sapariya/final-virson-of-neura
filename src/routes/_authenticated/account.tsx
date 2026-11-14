@@ -263,6 +263,29 @@ function AccountPage() {
           </a>
         </div>
 
+        {/* Owner Executive Clearance Section */}
+        <div className="mt-10 rounded-2xl border border-red-500/25 bg-red-950/10 p-6 backdrop-blur-md">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-red-500/20 text-red-400 font-bold text-xs">
+                ⚡
+              </span>
+              <div>
+                <h3 className="text-sm font-bold text-white">Owner Admin Console</h3>
+                <p className="text-xs text-muted-foreground">
+                  Classified root control panel, user tier elevation, and neural mesh telemetry.
+                </p>
+              </div>
+            </div>
+            <Link
+              to="/admin"
+              className="rounded-xl bg-gradient-to-r from-red-600 to-rose-600 px-4 py-2 text-xs font-bold text-white shadow-[0_0_15px_rgba(239,68,68,0.3)] hover:shadow-[0_0_25px_rgba(239,68,68,0.5)] transition-all"
+            >
+              Enter Admin Cockpit →
+            </Link>
+          </div>
+        </div>
+
         <div className="mt-10 border-t border-border/60 pt-6">
           <button
             onClick={() => {

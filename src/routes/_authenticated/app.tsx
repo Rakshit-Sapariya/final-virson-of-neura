@@ -1053,7 +1053,7 @@ Would you like to generate a sample fullstack component to test the Canvas view?
         </div>
 
         {/* Links row */}
-        <div className="grid grid-cols-2 gap-1.5 text-center text-[11px]">
+        <div className="grid grid-cols-3 gap-1.5 text-center text-[11px]">
           <Link
             to="/integrations"
             className="px-2 py-1.5 rounded-lg border border-border/50 hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
@@ -1065,6 +1065,13 @@ Would you like to generate a sample fullstack component to test the Canvas view?
             className="px-2 py-1.5 rounded-lg border border-border/50 hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
           >
             Settings
+          </Link>
+          <Link
+            to="/admin"
+            className="px-2 py-1.5 rounded-lg border border-red-500/30 bg-red-500/10 hover:bg-red-500/20 text-red-400 font-semibold transition-colors"
+            title="Classified Owner Admin Console"
+          >
+            Admin
           </Link>
         </div>
       </div>
